@@ -1,16 +1,8 @@
 {
-  "name": "Spot",
-  "base": "PersistedModel",
+  "name": "user",
+  "base": "User",
   "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "location": {
-      "type": "geopoint",
-      "required": true
-    }
-  },
+  "properties": {},
   "validations": [],
   "relations": {
     "votes":{
@@ -23,5 +15,5 @@
     }
   },
   "acls": [],
-  "methods": {}
+  "methods": []
 }
