@@ -1,0 +1,23 @@
+{
+  "name": "Spot",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "location": {
+      "type": "geopoint",
+      "required": true
+    }
+  },
+  "validations": [],
+  "relations": {
+    "votes":{
+      "type": "hasMany",
+      "model": "Vote"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

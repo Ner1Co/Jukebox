@@ -1,0 +1,22 @@
+{
+  "name": "Suggestion",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "youtubeLink": {
+      "type": "string"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "votes":{
+      "type": "hasMany",
+      "model": "Vote"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}
