@@ -1,0 +1,5 @@
+key name:
+browser_key1'
+
+api key youtube:
+AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g
