@@ -48,5 +48,9 @@
   "Vote": {
     "dataSource": "db",
     "public": true
+  },
+  "Song": {
+    "dataSource": "db",
+    "public": true
   }
 }

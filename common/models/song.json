@@ -1,16 +1,23 @@
 {
-  "name": "Suggestion",
+  "name": "Song",
   "base": "PersistedModel",
   "idInjection": true,
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "link": {
+      "type": "string"
+    },
+    "api": {
+      "type": "string"
+    }
+  },
   "validations": [],
   "relations": {
-    "votes":{
+    "suggestions":{
       "type": "hasMany",
-      "model": "Vote"
+      "model": "Suggestion"
     }
   },
   "acls": [],
