@@ -20,6 +20,10 @@
     "suggestions":{
       "type": "hasMany",
       "model": "Suggestion"
+    },
+    "playedSongs":{
+      "type": "hasMany",
+      "model": "PlayedSong"
     }
   },
   "acls": [],

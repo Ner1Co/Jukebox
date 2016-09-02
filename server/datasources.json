@@ -2,5 +2,10 @@
   "db": {
     "name": "db",
     "connector": "memory"
+  },
+  "storage": {
+    "name": "storage",
+    "connector": "memory"
+
   }
 }

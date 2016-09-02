@@ -1,0 +1,22 @@
+{
+  "name": "PlayedSong",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "date": {
+      "type": "date"
+    }
+  },
+  "validations": [],
+  "relations": {
+    "suggestion":{
+      "type": "belongsTo",
+      "model": "Suggestion"
+    }
+  },
+  "acls": [],
+  "methods": {}
+}

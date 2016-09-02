@@ -20,6 +20,12 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "property": "newSuggestion"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "property": "getNextSong"
     }
   ],
   "methods": []
