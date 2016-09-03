@@ -3,9 +3,13 @@
     "name": "db",
     "connector": "memory"
   },
-  "storage": {
-    "name": "storage",
-    "connector": "memory"
-
+  "mongodb": {
+    "name": "mongodb",
+    "connector": "mongodb",
+    "host": "ds019866.mlab.com",
+    "database": "jukebox-cloud",
+    "username": "bmantl",
+    "password": "grimDB21",
+    "port": 19866
   }
 }

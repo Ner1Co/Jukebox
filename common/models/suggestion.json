@@ -5,12 +5,20 @@
   "options": {
     "validateUpsert": true
   },
-  "properties": {},
+  "properties": {
+    "date": {
+      "type": "date"
+    }
+  },
   "validations": [],
   "relations": {
     "votes":{
       "type": "hasMany",
       "model": "Vote"
+    },
+    "song": {
+      "type": "belongsTo",
+      "model": "Song"
     }
   },
   "acls": [],

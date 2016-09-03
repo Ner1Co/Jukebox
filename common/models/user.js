@@ -2,14 +2,23 @@ var YouTube = require('youtube-node');
 var youTube = new YouTube();
 
 module.exports = function(user) {
-    //data : {spotId, song : {link, api}, comment}
+    /*
+     {
+        "spotId":"id",
+         "song":{
+             "apiId":"id",
+            "api":"api"
+        },
+        "comment":"str"
+     }
+     */
     user.newSuggestion = function (id, data, callback){
         var Song = user.app.models.Song;
         var Suggestion = user.app.models.Suggestion;
         var Vote = user.app.models.Vote;
 
         function createSuggestion(song) {
-            Suggestion.create({userId: id, songId: song.id, spotId: data.spotId}, (err, newSuggestion) => {
+            Suggestion.create({userId: id, songId: song.id, spotId: data.spotId, date: new Date()}, (err, newSuggestion) => {
                 Vote.create({score: 1, date: new Date(), comment: data.comment, suggestionId: newSuggestion.id,
                     userId: id, spotId: data.spotId}, (err, newVote) => {
                     newSuggestion.vote = newVote;
@@ -20,7 +29,7 @@ module.exports = function(user) {
 
 
 
-        Song.findOne({where: {and :[{api: data.song.api}, {link: data.song.link}]}}, (err ,foundSong) => {
+        Song.findOne({where: {and :[{api: data.song.api}, {apiId: data.song.apiId}]}}, (err ,foundSong) => {
             if(foundSong) {
                 createSuggestion(foundSong);
             } else {
@@ -34,41 +43,91 @@ module.exports = function(user) {
     user.remoteMethod(
         'newSuggestion',
         {
-            accepts: [{arg: 'id', type: 'string'}, {arg: 'data', type: 'object', http: { source: 'body' }}],
+            accepts: [{arg: 'id', type: 'string'}, {arg: 'data', type: 'json', http: { source: 'body' }}],
             http: {path: '/:id/newSuggestion', verb: 'post'},
             returns: {arg: 'result', type: 'string', root: true}
         }
     );
 
+    function getElasticRating(suggestion, callback) {
+        callback(null, 0);
+    }
+
+    function getYoutubeRating(suggestion) {
+        var song = suggestion.song();
+        var rating = song.statistics.likeCount / song.statistics.viewCount - song.statistics.dislikeCount / song.statistics.viewCount;
+
+        return rating;
+    }
+
+    // return a number between 0 and 1
+    function getLocalRating(suggestion, playedSongs) {
+        playedSongs.forEach(playedSong => {
+            if (playedSong.suggestion().songId == suggestion.songId) {
+                return 0;
+            }
+        });
+
+        var rating = 0;
+        suggestion.votes().forEach(vote => {
+            rating += vote.score;
+        });
+        return (rating / suggestion.votes().length + 1) / 2;
+    }
+
     user.getNextSong = function (id, spotId, callback) {
-        var Song = user.app.models.Song;
-        var Suggestion = user.app.models.Suggestion;
-        var Vote = user.app.models.Vote;
         var Spot = user.app.models.Spot;
+        var filter =
+        {
+            include:[
+                {
+                    relation: "suggestions",
+                    scope:{
+                        include:[
+                            {
+                                relation:"song"
+                            },
+                            {
+                                relation:"votes"
+                            }
+                        ]
+                    }
+                },
+                {
+                    relation: "playedSongs",
+                    scope: {
+                        include:[
+                            {
+                                relation: "suggestion"
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
 
-        Spot.findById({id: spotId}, {include: [{suggestions: "songs"}, "playedSongs"]}, (err, spot) => {
+        Spot.findById(spotId, filter, (err, spot) => {
+            var elasticCounter = spot.suggestions().length;
+            var topRatedSong = null;
+            var maxScore = 0;
+            spot.suggestions().forEach(suggestion => {
+                getElasticRating(suggestion, (err, elasticRating) => {
+                    if (err) {
+                        callback(err, null);
+                    }
+                    var score = getLocalRating(suggestion, spot.playedSongs()) + getYoutubeRating(suggestion) + elasticRating;
+                    if(score > maxScore) {
+                        topRatedSong = suggestion.song();
+                    }
+
+                    if (--elasticCounter == 0) {
+                        callback(null, topRatedSong);
+                    }
+
+                })
+            })
 
         });
-        // Suggestion.find({include: "song"},(err, suggestions) => {
-        //
-        // });
-
-
-
-        youTube.setKey('AIzaSyB1OOSpTREs85WUMvIgJvLTZKye4BVsoFU');
-
-        youTube.getRating('HcwTxRuq-uk', function(error, result) {
-            if (error) {
-                callback(error, null);
-               // console.log(error);
-            }
-            else {
-                callback(null, result);
-               // console.log(JSON.stringify(result, null, 2));
-            }
-        });
-
-
     };
 
     user.remoteMethod(

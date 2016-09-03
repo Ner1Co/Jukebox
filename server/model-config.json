@@ -14,47 +14,47 @@
     ]
   },
   "User": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": false
   },
   "AccessToken": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": false
   },
   "user": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   },
   "ACL": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": false
   },
   "RoleMapping": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": false
   },
   "Role": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": false
   },
   "Spot": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   },
   "Suggestion": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   },
   "Vote": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   },
   "Song": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   },
   "PlayedSong": {
-    "dataSource": "storage",
+    "dataSource": "mongodb",
     "public": true
   }
 }
