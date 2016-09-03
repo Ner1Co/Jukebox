@@ -104,7 +104,7 @@ module.exports = function(user) {
                     }
                 }
             ]
-        }
+        };
 
         Spot.findById(spotId, filter, (err, spot) => {
             var elasticCounter = spot.suggestions().length;
