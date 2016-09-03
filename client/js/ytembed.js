@@ -273,8 +273,9 @@ var ytEmbed = {
                     } else {
                         //a.setAttribute('href','#'+this.cfg.block+'Player');
                     }
-                    a.style.cursor = 'pointer';
+                    //a.style.cursor = 'pointer';
 
+                    /*
                     if (a.addEventListener) {
                         a.addEventListener('click', this.playVideo.bind(this, {
                             'id': id,
@@ -286,6 +287,7 @@ var ytEmbed = {
                             'cfg': cfg
                         }));
                     }
+                    */
                 } else {
                     a.setAttribute('href', 'https://www.youtube.com/watch?v=' + id);
                 }
@@ -304,8 +306,9 @@ var ytEmbed = {
                     li.appendChild(a);
                 } else {
                     //this.cfg.layout = full
-                    li.innerHTML = '<table cellspacing="0" cellpadding="0" border="0"><tr><td valign="top" rowspan="2"></td><td valign="top"><h3>' + entry.snippet.title + '</h3><span>' + this.formatDescription(entry.snippet.description) + '</span></td><td valign="top" style="width: 150px" class="meta"><div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + '<br>' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + 'From: <a href="http://www.youtube.com/profile?user=' + entry.snippet.channelTitle + '">' + entry.snippet.channelTitle + '</a></div></td></tr></table>';
-                    li.firstChild.firstChild.firstChild.firstChild.appendChild(a);
+                    //li.innerHTML = '<table cellspacing="0" cellpadding="0" border="0"><tr><td valign="top" rowspan="2"></td><td valign="top"><h3>' + entry.snippet.title + '</h3><span>' + this.formatDescription(entry.snippet.description) + '</span></td><td valign="top" style="width: 150px" class="meta"><div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + '<br>' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + 'From: <a href="http://www.youtube.com/profile?user=' + entry.snippet.channelTitle + '">' + entry.snippet.channelTitle + '</a></div></td></tr></table>';
+                    li.innerHTML = '<div class="row srow" data-vid="'+ entry.id +'"><div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#suggestModal">Suggest This Song!</button></div>'
+                    li.firstChild.firstChild.appendChild(a);
                 }
                 ul.appendChild(li);
             }

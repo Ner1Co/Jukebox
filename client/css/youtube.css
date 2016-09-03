@@ -14,3 +14,121 @@
     width:100%;
     height:80%;
 }
+
+.vote span{
+    font-size: x-large;
+    cursor: pointer;
+}
+.vote span:hover{
+    font-size: xx-large;
+    -webkit-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -ms-transition: all 0.3s ease;
+}
+
+#hp{
+    animation: beat .50s infinite alternate;
+    transform-origin: center;
+}
+
+@keyframes beat{
+    to { transform: scale(1.4); }
+}
+
+.ytSearch{
+    color: #000000;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;;
+}
+#youtubeDivSearch ul{
+    list-style: none;
+}
+.ytlist{
+    padding-left: 0px;
+}
+.nav-tabs a{
+    color:white;
+}
+
+.nav-tabs a:hover{
+    color:#F05F40;
+}
+
+.srow button{
+    margin-top: 10px;
+}
+/*search design*/
+.search:focus{
+    outline-width: 0;
+
+}
+.container-4{
+    overflow: hidden;
+    width: 300px;
+    vertical-align: middle;
+    white-space: nowrap;
+    margin: 0 auto;
+}
+
+.container-4 input.search{
+    width: 300px;
+    height: 50px;
+    background: #2b303b;
+    border: none;
+    font-size: 15pt;
+    float: left;
+    color: #fff;
+    padding-left: 15px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.container-4 input.search::-webkit-input-placeholder {
+    color: #65737e;
+}
+
+.container-4 input.search:-moz-placeholder { /* Firefox 18- */
+    color: #65737e;
+}
+
+.container-4 input.search::-moz-placeholder {  /* Firefox 19+ */
+    color: #65737e;
+}
+
+.container-4 input.search:-ms-input-placeholder {
+    color: #65737e;
+}
+
+.container-4 button.icon{
+    -webkit-border-top-right-radius: 5px;
+    -webkit-border-bottom-right-radius: 5px;
+    -moz-border-radius-topright: 5px;
+    -moz-border-radius-bottomright: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+
+    border: none;
+    background: #232833;
+    height: 50px;
+    width: 50px;
+    color: #4f5b66;
+    opacity: 0;
+    font-size: 10pt;
+
+    -webkit-transition: all .55s ease;
+    -moz-transition: all .55s ease;
+    -ms-transition: all .55s ease;
+    -o-transition: all .55s ease;
+    transition: all .55s ease;
+}
+
+.container-4:hover button.icon, .container-4:active button.icon, .container-4:focus button.icon{
+    outline: none;
+    opacity: 1;
+    margin-left: -50px;
+}
+
+.container-4:hover button.icon:hover{
+    background: white;
+}
