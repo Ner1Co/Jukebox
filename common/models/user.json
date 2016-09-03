@@ -26,6 +26,12 @@
       "principalType": "ROLE",
       "principalId": "$everyone",
       "property": "getNextSong"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "property": "getCurrentSong"
     }
   ],
   "methods": []

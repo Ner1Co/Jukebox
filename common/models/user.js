@@ -1,6 +1,3 @@
-var YouTube = require('youtube-node');
-var youTube = new YouTube();
-
 module.exports = function(user) {
     /*
      {
@@ -75,6 +72,55 @@ module.exports = function(user) {
         return (rating / suggestion.votes().length + 1) / 2;
     }
 
+    user.getCurrentSong = function(id, spotId, callback) {
+        var Spot = user.app.models.Spot;
+        var filter =
+        {
+            include:[
+                {
+                    relation: "playedSongs",
+                    scope: {
+                        include:[
+                            {
+                                relation: "suggestion",
+                                scope:{
+                                    include: {
+                                        relation: "song"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        };
+
+        Spot.findById(spotId, filter, (err, spot) => {
+
+            var playedSongs = spot.playedSongs();
+            console.log(playedSongs);
+            playedSongs.sort((a, b) => {
+                return new Date(b.date) - new Date(a.date);
+            });
+
+            var songIndex = playedSongs.length - 1;
+            var lastSong = playedSongs[songIndex];
+            lastSong.suggestion = playedSongs[songIndex].suggestion();
+            lastSong.suggestion.song = playedSongs[songIndex].suggestion().song;
+
+            callback(null, lastSong);
+        });
+    };
+
+    user.remoteMethod(
+        'getCurrentSong',
+        {
+            accepts: [{arg: 'id', type: 'string'}, {arg: 'spotId', type: 'string'}],
+            http: {path: '/:id/getCurrentSong', verb: 'get'},
+            returns: {arg: 'result', type: 'object', root: true}
+        }
+    );
+
     user.getNextSong = function (id, spotId, callback) {
         var Spot = user.app.models.Spot;
         var filter =
@@ -148,7 +194,7 @@ module.exports = function(user) {
  {
    "spotId": "1",
    "song": {
-     "link": "https://www.youtube.com/watch?v=T2zazSUlxzU",
+     "apiId": "T2zazSUlxzU",
      "api": "youtube"
    },
    "comment": "new comment"
