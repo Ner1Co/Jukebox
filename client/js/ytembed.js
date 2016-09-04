@@ -307,10 +307,15 @@ var ytEmbed = {
                 } else {
                     //this.cfg.layout = full
                     //li.innerHTML = '<table cellspacing="0" cellpadding="0" border="0"><tr><td valign="top" rowspan="2"></td><td valign="top"><h3>' + entry.snippet.title + '</h3><span>' + this.formatDescription(entry.snippet.description) + '</span></td><td valign="top" style="width: 150px" class="meta"><div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + '<br>' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + 'From: <a href="http://www.youtube.com/profile?user=' + entry.snippet.channelTitle + '">' + entry.snippet.channelTitle + '</a></div></td></tr></table>';
-                    li.innerHTML = '<div class="row srow" data-vid="'+ entry.id +'"><div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><button onclick="defineSug(this)" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#suggestModal" data-vid="'+ entry.id +'">Suggest This Song!</button></div>'
+                    li.innerHTML = '<div class="row srow" data-vid="'+ entry.id +'"><div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><button ' + (suggestedIds.indexOf(entry.id)>-1 ? 'disabled'  : '')+' onclick="defineSug(this)" type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#suggestModal" data-vid="'+ entry.id +'">' + (suggestedIds.indexOf(entry.id)>-1 ? 'suggestion accepted'  : 'Suggest This Song!')+'</button></div>'
                     li.firstChild.firstChild.appendChild(a);
                 }
                 ul.appendChild(li);
+                console.log(entry.id)
+                if (suggestedIds.indexOf(entry.id)>-1){
+                    $('button[data-vid="'+ entry.id +'"]').text("Suggestion Accepted!");
+                    $('button[data-vid="'+ entry.id +'"]').attr("disabled", "disabled");
+                }
             }
 
             //for fixed to bottom videos
