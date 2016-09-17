@@ -73,7 +73,7 @@
     <header>
         <div class="header-content">
             <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span>  Playing</h1>
-            <h2 id="currSong" data-vid="">Chingy - Right Thurr</h2>
+            <h2 id="currSong" data-vid=""></h2>
             <div class="vote">
                 <span id="vu" class="glyphicon glyphicon-thumbs-up up" aria-hidden="true" onclick="voteCurrent('up')"></span>
 
@@ -196,17 +196,42 @@
         var suggestedIds = [];
 
         var submitSug = function(){
+            suggestedIds.push($("#suggestModal").attr("data-vid"));
+
+            //send suggestion via ajax call
+            var sugData = {
+                spotId:"57ca97a530813219709eb4e4",
+                song:{
+                    apiId:$("#suggestModal").attr("data-vid"),
+                    api:"youtube"
+                },
+                comment:$('#suggestText').val()
+            };
             $('button[data-vid="'+ $("#suggestModal").attr("data-vid") +'"]').text("Suggestion Accepted!");
             $('button[data-vid="'+ $("#suggestModal").attr("data-vid") +'"]').attr("disabled", "disabled");
             $('#suggestText').val("");
-            suggestedIds.push($("#suggestModal").attr("data-vid"))
-            //send suggestion via ajax call
+
+            console.log(JSON.stringify(sugData));
+            $.ajax({
+                url:"/api/users/" + getCookie("id") + "/newSuggestion",
+                type: "POST",
+                data:JSON.stringify(sugData),
+                contentType:"application/json",
+                success:function(data, textStatus){
+                    console.log("suggestion success");
+                    console.log(data);
+                },
+                error:function(err, txtStatus){
+                    console.log("fail suggestion");
+                    console.log(err)
+                }
+            })
         };
-        var ytIds = ["uIjLFSyE1GY", "yp4hSze5BaM"]
+        var ytIds = ["uIjLFSyE1GY", "yp4hSze5BaM"];
         var getSug = function(){
             $('#sugLoad').fadeIn();
             $('.sugCtr').fadeOut();
-            $('.sugCtr').empty();
+            $('.sugCtr ').empty();
             //ajax call to server to get ids of suggested videos
 
             //use api to get videos data
@@ -255,19 +280,40 @@
                 $('#vu').animate({ 'color': '#FFF', 'font-size': '12px' }, 1000);
             }
         };
-
-        $('document').ready(function(){
-
-        });
-
         function onLoadFn() {
             // make gapi.client calls
             gapi.client.setApiKey("AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g");
             gapi.client.load("youtube","v3",function(){
-                console.log("loded")
+                console.log("loaded");
+                loginCallback()
             })
         }
-        gapi.load("client", onLoadFn);
+        $('document').ready(function(){
+
+
+            var c = document.cookie;
+            if (getCookie("id") === "") {
+                $("#myModal").modal();
+            }else{
+                gapi.load("client", onLoadFn);
+            }
+        });
+        function loginCallback(){
+            $.ajax({
+                url:"/api/users/"+getCookie("id")+"/getCurrentSong?spotId=57ca97a530813219709eb4e4",
+                type: "GET",
+                success:function(data, textStatus){
+                    console.log("song found");
+                    console.log(data);
+                    search(data.suggestion.song.apiId)
+                },
+                error:function(err, txtStatus){
+                    console.log("fail song search")
+                    console.log(err)
+                }
+            })
+        }
+
         var lastSearchResult;
         function search(id) {
             var request = gapi.client.youtube.videos.list({
@@ -301,6 +347,158 @@
         }
 
 
+
+    </script>
+    <!-- Modal -->
+    <div class="modal fade" data-keyboard="false" data-backdrop="static" id="myModal" role="dialog">
+        <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header" style="padding:35px 50px;">
+            <h4 id="modalTitle"><span class="glyphicon glyphicon-lock"></span> Login</h4>
+        </div>
+        <div class="modal-body" style="padding:40px 50px;">
+
+            <form id="signup" role="formSignUp" style="display: none" onsubmit="return signup()">
+                <div class="form-group">
+                    <label for="susrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                    <input type="text" class="form-control" id="susrname" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="spsw1"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                    <input type="text" class="form-control" id="spsw1" placeholder="Enter password">
+                </div>
+                <div class="form-group">
+                    <label for="spsw2"><span class="glyphicon glyphicon-eye-open"></span> Password Verification</label>
+                    <input type="text" class="form-control" id="spsw2" placeholder="Verify password">
+                </div>
+                <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-save"></span> Register</button>
+            </form>
+            <form id="login" role="formLogin" onsubmit="return login()">
+                <div class="form-group">
+                    <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                    <input type="text" class="form-control" id="usrname" placeholder="Enter email">
+                </div>
+                <div class="form-group">
+                    <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                    <input type="text" class="form-control" id="psw" placeholder="Enter password">
+                </div>
+                <div class="checkbox">
+                    <label><input type="checkbox" value="" checked>Remember me</label>
+                </div>
+                <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <p style="color: red; cursor: pointer" onclick="changeFormState()" id="stateText">Not a member? Sign Up</p>
+        </div>
+    </div>
+
+    </div>
+    </div>
+    </div>
+
+    <script>
+        $("#signup").submit(function(e){
+            console.log("cancel")
+            e.preventDefault();
+        });
+        $("#login").submit(function(e){
+            e.preventDefault();
+        });
+        function signup(){
+            console.log("sugntup")
+            if ($('#spsw1').val()!== $('#spsw2').val()){
+                alert("passwords must match")
+            }else{
+                var data = {
+                    "email":$('#susrname').val(),
+                    "password":$('#spsw1').val()
+                };
+                $.ajax({
+                    url:"/api/users",
+                    type: "POST",
+                    contentType:"application/json",
+                    data:JSON.stringify(data),
+                    success:function(data, textStatus){
+                        console.log("success signup")
+                        console.log(data)
+
+                        setCookie("id", data.userId, 30)
+                        $('#myModal').modal('hide');
+                        gapi.load("client", onLoadFn);
+                    },
+                    error:function(err, txtStatus){
+                        console.log("fail register")
+                        console.log(err)
+                    }
+                })
+            }
+        }
+        function login(){
+            var data = {
+                "email":$('#usrname').val(),
+                "password":$('#psw').val(),
+                "ttl":1209600000
+            };
+            $.ajax({
+                url:"/api/users/login",
+                type: "POST",
+                contentType:"application/json",
+                data:JSON.stringify(data),
+                success:function(data, textStatus){
+                    console.log("success login")
+                    console.log(data)
+                    setCookie("id", data.userId, data.ttl)
+                    $('#myModal').modal('hide');
+                    gapi.load("client", onLoadFn);
+                },
+                error:function(err, txtStatus){
+                    console.log("fail login")
+                    console.log(err)
+                }
+            })
+        }
+
+        function getCookie(cname) {
+            var name = cname + "=";
+            var ca = document.cookie.split(';');
+            for(var i = 0; i <ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length,c.length);
+                }
+            }
+            return "";
+        }
+        function setCookie(cname, cvalue, exdays) {
+            var d = new Date();
+            d.setTime(d.getTime() + (exdays*24*60*60*1000));
+            var expires = "expires="+d.toUTCString();
+            document.cookie = cname + "=" + cvalue + "; " + expires;
+        }
+        var state = "login";
+
+        function changeFormState(){
+            if (state==="login"){
+                $('#login').fadeOut("fast", function(){
+                    $('#signup').fadeIn("fast");
+                });
+                $('#stateText').text("Already a member? Sign In");
+                $('#modalTitle').text("Sign Up");
+                state = "signup"
+            }else{
+                $('#signup').fadeOut("fast", function(){
+                    $('#login').fadeIn("fast");
+                });
+                $('#stateText').text("Not a member? Sign Up");
+                $('#modalTitle').text("Login");
+                state = "login"
+            }
+        }
 
     </script>
 
