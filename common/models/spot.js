@@ -3,10 +3,11 @@ module.exports = function(spot) {
     spot.extendedSuggestions = function (id, callback) {
 
         var Suggestion = spot.app.models.Suggestion;
+        var mindate = Date.now() - 3 * 60 * 60 * 1000;
         var filter =
         {
             where: {
-                spotId: id
+                and :[{spotId: id},  {date: {gt: mindate}}]
             },
             include:[
                 {

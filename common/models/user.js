@@ -15,13 +15,42 @@ module.exports = function(user) {
         var Vote = user.app.models.Vote;
 
         function createSuggestion(song) {
-            Suggestion.create({userId: id, songId: song.id, spotId: data.spotId, date: new Date()}, (err, newSuggestion) => {
-                Vote.create({score: 1, date: new Date(), comment: data.comment, suggestionId: newSuggestion.id,
-                    userId: id, spotId: data.spotId}, (err, newVote) => {
-                    newSuggestion.vote = newVote;
-                    callback(null, newSuggestion);
+            var minDate = Date.now() - 24 * 60 * 60 * 1000;
+
+            var filter = {
+                where : {
+                    and : [
+                        { date: {gt: minDate}},
+                        {songId: song.id}
+                    ]
+
+                }
+            }
+            Suggestion.findOne(filter, (err, suggestion) => {
+                if(err) {
+                    callback(err, null);
+                    return;
+                }
+                if(suggestion) {
+                    var error = {
+                        "error": {
+                            "name": "SameSuggestion",
+                            "status": 999,
+                            "message": "Attempted to create a suggestion for the same song in the last 24 hours.",
+                            "statusCode": 999,
+                        }
+                    }
+                    callback(error, null);
+                    return;
+                }
+                Suggestion.create({userId: id, songId: song.id, spotId: data.spotId, date: new Date()}, (err, newSuggestion) => {
+                    Vote.create({score: 1, date: new Date(), comment: data.comment, suggestionId: newSuggestion.id,
+                        userId: id, spotId: data.spotId}, (err, newVote) => {
+                        newSuggestion.vote = newVote;
+                        callback(null, newSuggestion);
+                    });
                 });
-            });
+            })
         }
 
 
@@ -59,11 +88,11 @@ module.exports = function(user) {
 
     // return a number between 0 and 1
     function getLocalRating(suggestion, playedSongs) {
-        playedSongs.forEach(playedSong => {
-            if (playedSong.suggestion().songId == suggestion.songId) {
-                return 0;
-            }
-        });
+        // playedSongs.forEach(playedSong => {
+        //     if (playedSong.suggestion().songId == suggestion.songId) {
+        //         return 0;
+        //     }
+        // });
 
         var rating = 0;
         suggestion.votes().forEach(vote => {
@@ -154,6 +183,18 @@ module.exports = function(user) {
 
         Spot.findById(spotId, filter, (err, spot) => {
             var elasticCounter = spot.suggestions().length;
+            if (!elasticCounter) {
+                var error = {
+                    "error": {
+                        "name": "NoSuggestions",
+                        "status": 998,
+                        "message": "There are no pending suggestions.",
+                        "statusCode": 998,
+                    }
+                }
+                callback(error, null);
+                return;
+            }
             var topRatedSuggestion = null;
             var maxScore = 0;
             spot.suggestions().forEach(suggestion => {
