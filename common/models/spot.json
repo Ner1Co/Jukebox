@@ -8,7 +8,11 @@
   "properties": {
     "location": {
       "type": "geopoint",
-      "required": true
+      "required": false
+    }
+  ,
+    "name":{
+      "type": "string"
     }
   },
   "validations": [],

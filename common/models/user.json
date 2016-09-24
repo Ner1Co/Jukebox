@@ -2,7 +2,11 @@
   "name": "user",
   "base": "User",
   "idInjection": true,
-  "properties": {},
+  "properties": {
+  "admin":{
+    "type":"string"
+    }
+  },
   "validations": [],
   "relations": {
     "votes":{
