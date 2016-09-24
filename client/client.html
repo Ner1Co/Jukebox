@@ -224,14 +224,14 @@
             success: function (data, textStatus) {
                 console.log("get all suggestions");
                 console.log(data);
-                data.forEach(function (sug, idx){
+                data.forEach(function (sug, idx) {
                     ytIds.push(sug.song.apiId)
                     entry = getVideoData(sug.song.apiId, function (entry) {
                         var row = document.createElement('div');
                         row.className = "row";
                         row.setAttribute("data-vid", sug.song.apiId);
                         console.log(entry)
-                        row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="'+ entry.snippet.thumbnails.medium.url+'" alt=""/></div><div class="vote"> <span data-vid="' + entry.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + entry.id + "'" + ')"></span> <span data-vid="' + entry.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + entry.id + "'" + ')"></span> </div>';
+                        row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-vid="' + entry.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + entry.id + "'" + ')"></span> <span data-vid="' + entry.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + entry.id + "'" + ')"></span> </div>';
                         $('.sugCtr').prepend(row);
                         if (suggestedIds.indexOf(sug.song.apiId) > -1) {
                             $('button[data-vid="' + sug.song.apiId + '"]').text("Suggestion Accepted!");
@@ -284,7 +284,7 @@
             setInterval(loginCallback, 10000000);
         })
     }
-    function getSpots(callback){
+    function getSpots(callback) {
 //get spot lists
         $.ajax({
             url: "/api/spots",
@@ -292,12 +292,12 @@
             success: function (data) {
                 console.log(data)
                 data.forEach(function (item, index) {
-                    if (item.name===undefined || item.name===""){
-                        $('#spots').append('<option data-id="' + item.id +'">' + item.id + '</option>');
-                        $('#spotsReg').append('<option data-id="' + item.id +'">' + item.id + '</option>');
-                    }else{
-                        $('#spots').append('<option data-id="' + item.id +'">' + item.name + '</option>');
-                        $('#spotsReg').append('<option data-id="' + item.id +'">' + item.name + '</option>');
+                    if (item.name === undefined || item.name === "") {
+                        $('#spots').append('<option data-id="' + item.id + '">' + item.id + '</option>');
+                        $('#spotsReg').append('<option data-id="' + item.id + '">' + item.id + '</option>');
+                    } else {
+                        $('#spots').append('<option data-id="' + item.id + '">' + item.name + '</option>');
+                        $('#spotsReg').append('<option data-id="' + item.id + '">' + item.name + '</option>');
                     }
                     callback();
                 });
@@ -310,7 +310,9 @@
     }
     $('document').ready(function () {
         if (Cookies.get("id") === undefined) {
-            getSpots(function(){$("#myModal").modal();})
+            getSpots(function () {
+                $("#myModal").modal();
+            })
         } else {
             $('#spotName').text(Cookies.get("spotName"));
             gapi.load("client", onLoadFn);
@@ -325,11 +327,13 @@
         $('#spotName').text("");
         $('#login').trigger("reset");
         $('#signup').trigger("reset");
-        getSpots(function(){$("#myModal").modal();})
+        getSpots(function () {
+            $("#myModal").modal();
+        })
     }
     function loginCallback() {
         $.ajax({
-            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId="+Cookies.get("spot"),
+            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=" + Cookies.get("spot"),
             type: "GET",
             success: function (data, textStatus) {
                 console.log("song found");
@@ -340,8 +344,8 @@
                 console.log("fail song search")
                 console.log(err)
 
-                if (err.responseJSON.error.error.status!== undefined && err.responseJSON.error.error.status===998 ||
-                        err.responseJSON.error.error.status===997){
+                if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 998 ||
+                        err.responseJSON.error.error.status === 997) {
                     $('#currSong').text("Silence in the spot, no songs yet...");
                 }
             }

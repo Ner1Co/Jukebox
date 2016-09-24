@@ -125,19 +125,19 @@
                     sentReqForNewSong = false;
                 }
             }
-            function playSongToServer(){
-                pData={
-                    "suggestionId":sugId
+            function playSongToServer() {
+                pData = {
+                    "suggestionId": sugId
                 };
                 $.ajax({
-                    url:"/api/spots/"+spotId+"/playedSongs",
-                    type:"POST",
-                    data:pData,
-                    success:function(data){
+                    url: "/api/spots/" + spotId + "/playedSongs",
+                    type: "POST",
+                    data: pData,
+                    success: function (data) {
                         console.log("success playing new song to server")
                         console.log(data)
                     },
-                    error:function(err){
+                    error: function (err) {
                         console.log("failed playing new song to serva")
                         console.log(err)
                     }
@@ -147,18 +147,18 @@
                 console.log("new video request at: " + player.getCurrentTime());
                 //generate request to server to get new song id
                 $.ajax({
-                    url:"/api/users/"+userId+"/getNextSong?spotId="+spotId,
-                    type:"GET",
-                    success: function (sData){
+                    url: "/api/users/" + userId + "/getNextSong?spotId=" + spotId,
+                    type: "GET",
+                    success: function (sData) {
                         console.log("success next video");
                         console.log(sData);
                         url = sData.song.apiId;
-                        sugId=sData.id;
-                        if (callback!==undefined){
+                        sugId = sData.id;
+                        if (callback !== undefined) {
                             callback()
                         }
                     },
-                    error: function(err){
+                    error: function (err) {
                         console.log("fail getting next video");
                         console.log(err);
                     }
@@ -249,8 +249,8 @@
 
 
     var state = "login";
-    var spotId ="";
-    var userId ="";
+    var spotId = "";
+    var userId = "";
     function changeFormState() {
         if (state === "login") {
             $('#login').fadeOut("fast", function () {
@@ -297,26 +297,26 @@
                     var data = {
                         "email": $('#susrname').val(),
                         "password": $('#spsw1').val(),
-                        "admin":spotData.id
+                        "admin": spotData.id
                     };
                     $.ajax({
                         url: "/api/users",
                         type: "POST",
                         contentType: "application/json",
                         data: JSON.stringify(data),
-                        success: function (userData, textStatus){
+                        success: function (userData, textStatus) {
                             console.log("success user with spot creation")
                             console.log(userData);
-                            $('#spotNameTitle').text("Welcome to "+sdata.name);
+                            $('#spotNameTitle').text("Welcome to " + sdata.name);
                             userId = userData.userId;
-                            getNewVideo(function(){
+                            getNewVideo(function () {
                                 player.cueVideoById(url);
                                 player.playVideo();
                                 playSongToServer()
                             });
                             $('#myModal').modal('hide');
                         },
-                        error: function(err, txtStatus){
+                        error: function (err, txtStatus) {
                             console.log("fail creation of user with spot");
                             console.log(err)
                         }
@@ -344,17 +344,17 @@
                 console.log("success login");
                 console.log(userData);
                 userId = userData.userId;
-                if (userData.user.admin ===undefined || userData.user.admin===""){
+                if (userData.user.admin === undefined || userData.user.admin === "") {
                     alert("no spot found for this user, please register a new spot user or login with a valid user");
-                }else{
+                } else {
                     $.ajax({
-                        url:"/api/spots/"+userData.user.admin,
-                        type:"GET",
-                        success: function (sData){
+                        url: "/api/spots/" + userData.user.admin,
+                        type: "GET",
+                        success: function (sData) {
                             console.log("success getting spot data of user")
-                            $('#spotNameTitle').text("Welcome to "+sData.name);
+                            $('#spotNameTitle').text("Welcome to " + sData.name);
                             spotId = sData.id;
-                            getNewVideo(function(){
+                            getNewVideo(function () {
                                 player.cueVideoById(url);
                                 player.playVideo();
                                 playSongToServer()
@@ -362,7 +362,7 @@
 
                             $('#myModal').modal('hide');
                         },
-                        error: function(err){
+                        error: function (err) {
                             console.log("fail getting spot data");
                             console.log(err);
                         }
