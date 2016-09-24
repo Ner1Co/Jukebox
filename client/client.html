@@ -329,12 +329,12 @@
     }
     function loginCallback() {
         $.ajax({
-            url: "/api/users/" + Cookies.get("id") + "/getNextSong?spotId="+Cookies.get("spot"),
+            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId="+Cookies.get("spot"),
             type: "GET",
             success: function (data, textStatus) {
                 console.log("song found");
                 console.log(data);
-                search(data.song.apiId)
+                search(data.suggestion.song.apiId)
             },
             error: function (err, txtStatus) {
                 console.log("fail song search")
