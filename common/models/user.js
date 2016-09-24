@@ -183,6 +183,18 @@ module.exports = function(user) {
 
         Spot.findById(spotId, filter, (err, spot) => {
             var elasticCounter = spot.suggestions().length;
+            if (!elasticCounter) {
+                var error = {
+                    "error": {
+                        "name": "NoSuggestions",
+                        "status": 998,
+                        "message": "There are no pending suggestions.",
+                        "statusCode": 998,
+                    }
+                }
+                callback(error, null);
+                return;
+            }
             var topRatedSuggestion = null;
             var maxScore = 0;
             spot.suggestions().forEach(suggestion => {
