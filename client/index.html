@@ -90,7 +90,7 @@
                 player = new YT.Player('player', {
                     height: '352',
                     width: '640',
-                    videoId: 'CFXVkHIsucw',
+                    videoId: '',
                     events: {
                         'onReady': onPlayerReady,
                         'onStateChange': onPlayerStateChange
@@ -122,15 +122,19 @@
                     sentReqForNewSong = false;
                 }
             }
-            function getNewVideo() {
+            function getNewVideo(callback) {
                 console.log("new video request at: " + player.getCurrentTime());
                 //generate request to server to get new song id
                 $.ajax({
-                    url:"/api/users/"+userID+"/getNextSong?spotId="+spotId,
+                    url:"/api/users/"+userId+"/getNextSong?spotId="+spotId,
                     type:"GET",
                     success: function (sData){
                         console.log("success next video");
-                        url = "dFN_PGlv-qc";
+                        console.log(sData)
+                        url = sData.song.apiId;
+                        if (callback!==undefined){
+                            callback()
+                        }
                     },
                     error: function(err){
                         console.log("fail getting next video");
@@ -283,6 +287,10 @@
                             console.log(userData);
                             $('#spotNameTitle').text("Welcome to "+sdata.name);
                             userId = userData.userId;
+                            getNewVideo(function(){
+                                player.cueVideoById(url);
+                                player.playVideo();
+                            });
                             $('#myModal').modal('hide');
                         },
                         error: function(err, txtStatus){
@@ -323,6 +331,11 @@
                             console.log("success getting spot data of user")
                             $('#spotNameTitle').text("Welcome to "+sData.name);
                             spotId = sData.id;
+                            getNewVideo(function(){
+                                player.cueVideoById(url);
+                                player.playVideo();
+                            });
+
                             $('#myModal').modal('hide');
                         },
                         error: function(err){
