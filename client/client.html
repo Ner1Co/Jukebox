@@ -185,7 +185,7 @@
 
         //send suggestion via ajax call
         var sugData = {
-            spotId: "57ca97a530813219709eb4e4",
+            spotId: Cookies.get("spot"),
             song: {
                 apiId: $("#suggestModal").attr("data-vid"),
                 api: "youtube"
