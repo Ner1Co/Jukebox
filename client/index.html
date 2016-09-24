@@ -125,7 +125,19 @@
             function getNewVideo() {
                 console.log("new video request at: " + player.getCurrentTime());
                 //generate request to server to get new song id
-                url = "dFN_PGlv-qc";
+                $.ajax({
+                    url:"/api/users/"+userID+"/getNextSong?spotId="+spotId,
+                    type:"GET",
+                    success: function (sData){
+                        console.log("success next video");
+                        url = "dFN_PGlv-qc";
+                    },
+                    error: function(err){
+                        console.log("fail getting next video");
+                        console.log(err);
+                    }
+                });
+
             }
             function stopVideo() {
                 player.stopVideo();
@@ -211,7 +223,8 @@
 
 
     var state = "login";
-
+    var spotId ="";
+    var userId ="";
     function changeFormState() {
         if (state === "login") {
             $('#login').fadeOut("fast", function () {
@@ -254,6 +267,7 @@
                 success: function (spotData, textStatus) {
                     console.log("success spot creation")
                     console.log(spotData);
+                    spotId = spotData.id;
                     var data = {
                         "email": $('#susrname').val(),
                         "password": $('#spsw1').val(),
@@ -268,6 +282,7 @@
                             console.log("success user with spot creation")
                             console.log(userData);
                             $('#spotNameTitle').text("Welcome to "+sdata.name);
+                            userId = userData.userId;
                             $('#myModal').modal('hide');
                         },
                         error: function(err, txtStatus){
@@ -297,6 +312,7 @@
             success: function (userData, textStatus) {
                 console.log("success login");
                 console.log(userData);
+                userId = userData.userId;
                 if (userData.user.admin ===undefined || userData.user.admin===""){
                     alert("no spot found for this user, please register a new spot user or login with a valid user");
                 }else{
@@ -306,6 +322,7 @@
                         success: function (sData){
                             console.log("success getting spot data of user")
                             $('#spotNameTitle').text("Welcome to "+sData.name);
+                            spotId = sData.id;
                             $('#myModal').modal('hide');
                         },
                         error: function(err){

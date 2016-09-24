@@ -58,6 +58,9 @@
                 <li>
                     <a class="page-scroll" href="#about">Search & Suggest</a>
                 </li>
+                <li>
+                    <a class="page-scroll" href="#" onclick="delCook()">Logout</a>
+                </li>
             </ul>
         </div>
         <!-- /.navbar-collapse -->
@@ -269,6 +272,7 @@
         gapi.client.load("youtube", "v3", function () {
             console.log("loaded");
             loginCallback()
+            setInterval(loginCallback, 5000);
         })
     }
     $('document').ready(function () {
@@ -280,28 +284,41 @@
                 success: function (data) {
                     console.log(data)
                     data.forEach(function (item, index) {
-                        $('#spots').append("<option>" + item.id + "</option>")
+                        if (item.name===undefined || item.name===""){
+                            $('#spots').append('<option data-id="' + item.id +'">' + item.id + '</option>')
+                            $('#spotsReg').append('<option data-id="' + item.id +'">' + item.id + '</option>')
+                        }else{
+                            $('#spots').append('<option data-id="' + item.id +'">' + item.name + '</option>')
+                            $('#spotsReg').append('<option data-id="' + item.id +'">' + item.name + '</option>')
+                        }
+
                     })
                 },
                 error: function (err) {
-                    console.log("cannot read spots lists")
+                    console.log("cannot read spots lists");
                     console.log(err)
                 }
             });
             $("#myModal").modal();
         } else {
-            $('#spotName').text(Cookies.get("spot"));
+            $('#spotName').text(Cookies.get("spotName"));
             gapi.load("client", onLoadFn);
         }
     });
     function delCook() {
         Cookies.remove('id');
         Cookies.remove('spot');
-
+        Cookies.remove('spotName');
+        $('#currSong').text("");
+        $('#currSong').attr("data-vid", "");
+        $('#spotName').text("");
+        $('#login').trigger("reset");
+        $('#signup').trigger("reset");
+        $("#myModal").modal();
     }
     function loginCallback() {
         $.ajax({
-            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=57ca97a530813219709eb4e4",
+            url: "/api/users/" + Cookies.get("id") + "/getNextSong?spotId="+Cookies.get("spot"),
             type: "GET",
             success: function (data, textStatus) {
                 console.log("song found");
@@ -311,6 +328,10 @@
             error: function (err, txtStatus) {
                 console.log("fail song search")
                 console.log(err)
+
+                if (err.responseJSON.error.error.status!== undefined && err.responseJSON.error.error.status===998){
+                    $('#currSong').text("Silence in the spot, no songs yet...");
+                }
             }
         })
     }
@@ -373,6 +394,12 @@
                             Verification</label>
                         <input type="text" class="form-control" id="spsw2" placeholder="Verify password">
                     </div>
+                    <div class="form-group">
+                        <label for="spotsReg"><span class="glyphicon glyphicon-eye-open"></span> Choose spot to login to</label>
+                        <select name="spot" id="spotsReg">
+
+                        </select>
+                    </div>
                     <button type="submit" class="btn btn-success btn-block"><span
                             class="glyphicon glyphicon-save"></span> Register
                     </button>
@@ -430,8 +457,11 @@
                 data: JSON.stringify(data),
                 success: function (data, textStatus) {
                     console.log("success signup")
-                    console.log(data)
+                    console.log(data);
 
+                    $('#spotName').text("Welcome to " + $('#spotsReg').val())
+                    Cookies.set("spot", $('#spotsReg option:selected').attr('data-id'));
+                    Cookies.set("spotName", $('#spotsReg').val());
                     Cookies.set("id", data.userId)
                     $('#myModal').modal('hide');
                     gapi.load("client", onLoadFn);
@@ -457,9 +487,10 @@
             success: function (data, textStatus) {
                 console.log("success login")
                 console.log(data);
-                $('#spotName').text("Welcome to " + $('#spots').val() + " Bar")
+                $('#spotName').text("Welcome to " + $('#spots').val());
                 Cookies.set("id", data.userId);
-                Cookies.set("spot", $('#spots').val());
+                Cookies.set("spot", $('#spots option:selected').attr('data-id'));
+                Cookies.set("spotName", $('#spots').val());
                 $('#myModal').modal('hide');
                 gapi.load("client", onLoadFn);
             },
