@@ -217,10 +217,23 @@ module.exports = function(user) {
                     }
                     var score = getLocalRating(suggestion, spot.playedSongs()) + getYoutubeRating(suggestion) + elasticRating;
                     if(score > maxScore) {
+                        maxScore = score;
                         topRatedSuggestion = suggestion;
                     }
 
                     if (--elasticCounter == 0) {
+                        if (!maxScore) {
+                            var error = {
+                                "error": {
+                                    "name": "NoSuggestions",
+                                    "status": 998,
+                                    "message": "There are no pending suggestions.",
+                                    "statusCode": 998,
+                                }
+                            }
+                            callback(error, null);
+                            return;
+                        }
                         callback(null, topRatedSuggestion);
                     }
 
