@@ -128,6 +128,18 @@ module.exports = function(user) {
 
             var playedSongs = spot.playedSongs();
             console.log(playedSongs);
+            if (!playedSongs.length) {
+                var error = {
+                    "error": {
+                        "name": "NoCurrentSong",
+                        "status": 997,
+                        "message": "There is nothing playing right now.",
+                        "statusCode": 997,
+                    }
+                }
+                callback(error, null);
+                return;
+            }
             playedSongs.sort((a, b) => {
                 return new Date(b.date) - new Date(a.date);
             });
