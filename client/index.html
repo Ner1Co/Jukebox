@@ -75,6 +75,7 @@
         <script>
             var stopPlayTimer;
             var url = "";
+            var sugId = "";
             var sentReqForNewSong = false;
             // 2. This code loads the IFrame Player API code asynchronously.
             var tag = document.createElement('script');
@@ -117,10 +118,30 @@
                     sentReqForNewSong = true;
                 }
                 if (event.data == YT.PlayerState.ENDED) {
+
                     player.cueVideoById(url);
                     player.playVideo();
+                    playSongToServer();
                     sentReqForNewSong = false;
                 }
+            }
+            function playSongToServer(){
+                pData={
+                    "suggestionId":sugId
+                };
+                $.ajax({
+                    url:"/api/spots/"+spotId+"/playedSongs",
+                    type:"POST",
+                    data:pData,
+                    success:function(data){
+                        console.log("success playing new song to server")
+                        console.log(data)
+                    },
+                    error:function(err){
+                        console.log("failed playing new song to serva")
+                        console.log(err)
+                    }
+                });
             }
             function getNewVideo(callback) {
                 console.log("new video request at: " + player.getCurrentTime());
@@ -130,8 +151,9 @@
                     type:"GET",
                     success: function (sData){
                         console.log("success next video");
-                        console.log(sData)
+                        console.log(sData);
                         url = sData.song.apiId;
+                        sugId=sData.id;
                         if (callback!==undefined){
                             callback()
                         }
@@ -290,6 +312,7 @@
                             getNewVideo(function(){
                                 player.cueVideoById(url);
                                 player.playVideo();
+                                playSongToServer()
                             });
                             $('#myModal').modal('hide');
                         },
@@ -334,6 +357,7 @@
                             getNewVideo(function(){
                                 player.cueVideoById(url);
                                 player.playVideo();
+                                playSongToServer()
                             });
 
                             $('#myModal').modal('hide');
