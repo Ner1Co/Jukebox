@@ -21,7 +21,8 @@ module.exports = function(user) {
                 where : {
                     and : [
                         { date: {gt: minDate}},
-                        {songId: song.id}
+                        {songId: song.id},
+                        {spotId: data.spotId}
                     ]
 
                 }
