@@ -16,8 +16,10 @@
 
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
-    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800'
+          rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Merriweather:400,300,300italic,400italic,700,700italic,900,900italic'
+          rel='stylesheet' type='text/css'>
 
     <!-- Plugin CSS -->
     <link href="vendor/magnific-popup/magnific-popup.css" rel="stylesheet">
@@ -29,458 +31,465 @@
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
     <!-- youtube search-->
     <script src='js/ytembed.js'></script>
+    <script src='js/cookie.js'></script>
 </head>
 
 <body id="page-top">
 
-    <nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
-        <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
-            <div class="navbar-header">
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                    <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
-                </button>
-                <a class="navbar-brand page-scroll" href="#page-top">Welcome To Chingy Bar</a>
-            </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
-            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a class="page-scroll" href="#about">About</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#services">Services</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#portfolio">Portfolio</a>
-                    </li>
-                    <li>
-                        <a class="page-scroll" href="#contact">Contact</a>
-                    </li>
-                </ul>
-            </div>
-            <!-- /.navbar-collapse -->
-        </div>
-        <!-- /.container-fluid -->
-    </nav>
-
-    <header>
-        <div class="header-content">
-            <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span>  Playing</h1>
-            <h2 id="currSong" data-vid=""></h2>
-            <div class="vote">
-                <span id="vu" class="glyphicon glyphicon-thumbs-up up" aria-hidden="true" onclick="voteCurrent('up')"></span>
-
-                <span id="vd" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="voteCurrent('down')"></span>
-
-            </div>
+<nav id="mainNav" class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span> Menu <i class="fa fa-bars"></i>
+            </button>
+            <a class="navbar-brand page-scroll" href="#page-top" id="spotName"></a>
         </div>
 
-    </header>
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="page-scroll" href="#about">Search & Suggest</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /.navbar-collapse -->
+    </div>
+    <!-- /.container-fluid -->
+</nav>
+
+<header>
+    <div class="header-content">
+        <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Playing</h1>
+
+        <h2 id="currSong" data-vid=""></h2>
+
+        <div class="vote">
+            <span id="vu" class="glyphicon glyphicon-thumbs-up up" aria-hidden="true"
+                  onclick="voteCurrent('up')"></span>
+
+            <span id="vd" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true"
+                  onclick="voteCurrent('down')"></span>
+
+        </div>
+    </div>
+
+</header>
 <!--YOUTUBE TABS-->
 
 
+<section class="bg-primary" id="about">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12  text-center">
+                <ul class="nav nav-tabs">
+                    <li class="active"><a data-toggle="tab" href="#home">Search & Suggest</a></li>
+                    <li><a onclick="getSug()" data-toggle="tab" href="#menu1">View Suggestions</a></li>
+                    <li><a data-toggle="tab" href="#menu2">History</a></li>
+                </ul>
 
-    <section class="bg-primary" id="about">
-        <div class="container">
-        <div class="container">
-            <div class="row">
-                <div class="col-lg-12  text-center">
-                    <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#home">Search & Suggest</a></li>
-                        <li><a onclick="getSug()" data-toggle="tab" href="#menu1">View Suggestions</a></li>
-                        <li><a data-toggle="tab" href="#menu2">History</a></li>
-                    </ul>
+                <div class="tab-content">
+                    <div id="home" class="tab-pane fade in active">
+                        <br/>
 
-                    <div class="tab-content">
-                        <div id="home" class="tab-pane fade in active">
-                            <br/>
-                            <div id="youtubeDiv"></div>
-                            <form class="ytSearch" onsubmit=>
-                                <div class="box">
-                                    <div class="container-4">
-                                        <input class="search" type="search" id="search" placeholder="Search & Suggest..." />
-                                        <button onclick="ytEmbed.init({'block':'youtubeDivSearch','type':'search','key':'AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g','q':document.getElementById('search').value,'results': 5,'meta':true}); return false;" class="icon"><i class="fa fa-search"></i></button>
-                                    </div>
+                        <div id="youtubeDiv"></div>
+                        <form class="ytSearch" onsubmit=>
+                            <div class="box">
+                                <div class="container-4">
+                                    <input class="search" type="search" id="search"
+                                           placeholder="Search & Suggest..."/>
+                                    <button onclick="ytEmbed.init({'block':'youtubeDivSearch','type':'search','key':'AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g','q':document.getElementById('search').value,'results': 5,'meta':true}); return false;"
+                                            class="icon"><i class="fa fa-search"></i></button>
                                 </div>
-                                <!--<input type="text" id="ytSearchField">  <input type="submit" value="  Search   ">-->
-                            </form>
-                            <div id="youtubeDivSearch"></div>
-                        </div>
-                        <div id="menu1" class="tab-pane fade">
-                            <h3>View Suggestions</h3>
-                            <span id="sugLoad" class="glyphicon glyphicon-refresh spinning"></span>
-                            <div class="sugCtr">
-
                             </div>
-                        </div>
-                        <div id="menu2" class="tab-pane fade">
-                            <h3>History</h3>
-                            <h2>Small Modal</h2>
-                            <!-- Trigger the modal with a button -->
+                            <!--<input type="text" id="ytSearchField">  <input type="submit" value="  Search   ">-->
+                        </form>
+                        <div id="youtubeDivSearch"></div>
+                    </div>
+                    <div id="menu1" class="tab-pane fade">
+                        <h3>View Suggestions</h3>
+                        <span id="sugLoad" class="glyphicon glyphicon-refresh spinning"></span>
 
-                            <p>Some content in menu 2.</p>
+                        <div class="sugCtr">
 
                         </div>
-                        </div>
-                    <div class="modal fade" id="suggestModal" role="dialog">
-                        <div class="modal-dialog modal-md">
-                            <div class="modal-content" style="color: #000;">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                    <h4 class="modal-title">Suggest</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="container-4">
-                                        <div class="box">
-                                            <input id="suggestText" style="font-size: 12px" class="search" type="search" placeholder="Why you like this song?"/>
-                                        </div>
+                    </div>
+                    <div id="menu2" class="tab-pane fade">
+                        <h3>History</h3>
+
+                        <h2>Small Modal</h2>
+                        <!-- Trigger the modal with a button -->
+
+                        <p>Some content in menu 2.</p>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="suggestModal" role="dialog">
+                    <div class="modal-dialog modal-md">
+                        <div class="modal-content" style="color: #000;">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Suggest</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container-4">
+                                    <div class="box">
+                                        <input id="suggestText" style="font-size: 12px" class="search" type="search"
+                                               placeholder="Why you like this song?"/>
                                     </div>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="submitSug()">Submit</button>
-                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal"
+                                        onclick="submitSug()">Submit
+                                </button>
                             </div>
                         </div>
                     </div>
-                    </div>
-
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
-    <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
+<!-- jQuery -->
+<script src="vendor/jquery/jquery.min.js"></script>
 
-    <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
 
-    <!-- Plugin JavaScript -->
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
-    <script src="vendor/scrollreveal/scrollreveal.min.js"></script>
-    <script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
+<!-- Plugin JavaScript -->
+<script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js"></script>
+<script src="vendor/scrollreveal/scrollreveal.min.js"></script>
+<script src="vendor/magnific-popup/jquery.magnific-popup.min.js"></script>
 
-    <!-- Theme JavaScript -->
-    <script src="js/creative.min.js"></script>
+<!-- Theme JavaScript -->
+<script src="js/creative.min.js"></script>
 
-    <!-- youtube api-->
-    <script src="https://apis.google.com/js/api.js"></script>
-    <script>
-        var suggestedIds = [];
+<!-- youtube api-->
+<script src="https://apis.google.com/js/api.js"></script>
+<script>
+    var suggestedIds = [];
 
-        var submitSug = function(){
-            suggestedIds.push($("#suggestModal").attr("data-vid"));
+    var submitSug = function () {
+        suggestedIds.push($("#suggestModal").attr("data-vid"));
 
-            //send suggestion via ajax call
-            var sugData = {
-                spotId:"57ca97a530813219709eb4e4",
-                song:{
-                    apiId:$("#suggestModal").attr("data-vid"),
-                    api:"youtube"
-                },
-                comment:$('#suggestText').val()
-            };
-            $('button[data-vid="'+ $("#suggestModal").attr("data-vid") +'"]').text("Suggestion Accepted!");
-            $('button[data-vid="'+ $("#suggestModal").attr("data-vid") +'"]').attr("disabled", "disabled");
-            $('#suggestText').val("");
+        //send suggestion via ajax call
+        var sugData = {
+            spotId: "57ca97a530813219709eb4e4",
+            song: {
+                apiId: $("#suggestModal").attr("data-vid"),
+                api: "youtube"
+            },
+            comment: $('#suggestText').val()
+        };
+        $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').text("Suggestion Accepted!");
+        $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').attr("disabled", "disabled");
+        $('#suggestText').val("");
 
-            console.log(JSON.stringify(sugData));
-            $.ajax({
-                url:"/api/users/" + getCookie("id") + "/newSuggestion",
-                type: "POST",
-                data:JSON.stringify(sugData),
-                contentType:"application/json",
-                success:function(data, textStatus){
-                    console.log("suggestion success");
-                    console.log(data);
-                },
-                error:function(err, txtStatus){
-                    console.log("fail suggestion");
-                    console.log(err)
+        console.log(JSON.stringify(sugData));
+        $.ajax({
+            url: "/api/users/" + Cookies.get("id") + "/newSuggestion",
+            type: "POST",
+            data: JSON.stringify(sugData),
+            contentType: "application/json",
+            success: function (data, textStatus) {
+                console.log("suggestion success");
+                console.log(data);
+            },
+            error: function (err, txtStatus) {
+                console.log("fail suggestion");
+                console.log(err)
+            }
+        })
+    };
+    var ytIds = ["uIjLFSyE1GY", "yp4hSze5BaM"];
+    var getSug = function () {
+        $('#sugLoad').fadeIn();
+        $('.sugCtr').fadeOut();
+        $('.sugCtr ').empty();
+        //ajax call to server to get ids of suggested videos
+
+        //use api to get videos data
+
+        ytIds.forEach(function (v, i) {
+
+            entry = getVideoData(v, function (entry) {
+                var row = document.createElement('div');
+                row.className = "row";
+                row.setAttribute("data-vid", v);
+                console.log(entry)
+                row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div class="vote"> <span data-vid="' + entry.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + entry.id + "'" + ')"></span> <span data-vid="' + entry.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + entry.id + "'" + ')"></span> </div>';
+                $('.sugCtr').prepend(row);
+                if (suggestedIds.indexOf(v) > -1) {
+                    $('button[data-vid="' + v + '"]').text("Suggestion Accepted!");
+                    $('button[data-vid="' + v + '"]').attr("disabled", "disabled");
                 }
-            })
-        };
-        var ytIds = ["uIjLFSyE1GY", "yp4hSze5BaM"];
-        var getSug = function(){
-            $('#sugLoad').fadeIn();
-            $('.sugCtr').fadeOut();
-            $('.sugCtr ').empty();
-            //ajax call to server to get ids of suggested videos
+            });
+        })
+    };
 
-            //use api to get videos data
-
-            ytIds.forEach(function(v,i){
-
-                entry = getVideoData(v,function(entry){
-                    var row = document.createElement('div');
-                    row.className="row";
-                    row.setAttribute("data-vid", v);
-                    console.log(entry)
-                    row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div class="vote"> <span data-vid="'+entry.id+'" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote('+"'up'"+",'"+entry.id+"'"+')"></span> <span data-vid="'+entry.id+'" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote('+"'down'"+",'"+entry.id+"'"+')"></span> </div>';
-                    $('.sugCtr').prepend(row);
-                    if (suggestedIds.indexOf(v)>-1){
-                        $('button[data-vid="'+ v +'"]').text("Suggestion Accepted!");
-                        $('button[data-vid="'+ v +'"]').attr("disabled", "disabled");
-                    }
-                });
-            })
-        };
-
-        var defineSug = function(elm){
-            $('#suggestModal').attr("data-vid",$(elm).attr("data-vid"))
-            console.log("defineSug");
-        };
-        var vote = function(v, id){
-            alert(id);
-            alert(v)
-            //send vote to server with id
-            if (v==="up"){
-                $('.up[data-vid="'+ id +'"]').animate({ 'color': '#FC0', 'font-size': '40px' }, 1000);
-                $('.down[data-vid="'+ id +'"]').animate({ 'color': '#FFF', 'font-size': '12px' }, 1000);
-            }else{
-                $('.down[data-vid="'+ id +'"]').animate({ 'color': '#FC0', 'font-size': '40px' }, 1000);
-                $('.up[data-vid="'+ id +'"]').animate({ 'color': '#FFF', 'font-size': '12px' }, 1000);
-            }
-        };
-        var voteCurrent = function(v){
-            alert(v);
-            //send vote to server with id
-            if (v==="up"){
-                $('#vu').animate({ 'color': '#FC0', 'font-size': '40px' }, 1000);
-                $('#vd').animate({ 'color': '#FFF', 'font-size': '12px' }, 1000);
-            }else{
-                $('#vd').animate({ 'color': '#FC0', 'font-size': '40px' }, 1000);
-                $('#vu').animate({ 'color': '#FFF', 'font-size': '12px' }, 1000);
-            }
-        };
-        function onLoadFn() {
-            // make gapi.client calls
-            gapi.client.setApiKey("AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g");
-            gapi.client.load("youtube","v3",function(){
-                console.log("loaded");
-                loginCallback()
-            })
+    var defineSug = function (elm) {
+        $('#suggestModal').attr("data-vid", $(elm).attr("data-vid"))
+        console.log("defineSug");
+    };
+    var vote = function (v, id) {
+        alert(id);
+        alert(v)
+        //send vote to server with id
+        if (v === "up") {
+            $('.up[data-vid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.down[data-vid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+        } else {
+            $('.down[data-vid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.up[data-vid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
         }
-        $('document').ready(function(){
-
-
-            var c = document.cookie;
-            if (getCookie("id") === "") {
-                $("#myModal").modal();
-            }else{
-                gapi.load("client", onLoadFn);
-            }
-        });
-        function loginCallback(){
+    };
+    var voteCurrent = function (v) {
+        alert(v);
+        //send vote to server with id
+        if (v === "up") {
+            $('#vu').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('#vd').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+        } else {
+            $('#vd').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('#vu').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+        }
+    };
+    function onLoadFn() {
+        // make gapi.client calls
+        gapi.client.setApiKey("AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g");
+        gapi.client.load("youtube", "v3", function () {
+            console.log("loaded");
+            loginCallback()
+        })
+    }
+    $('document').ready(function () {
+        if (Cookies.get("id") === undefined) {
+            //get spot lists
             $.ajax({
-                url:"/api/users/"+getCookie("id")+"/getCurrentSong?spotId=57ca97a530813219709eb4e4",
+                url: "/api/spots",
                 type: "GET",
-                success:function(data, textStatus){
-                    console.log("song found");
-                    console.log(data);
-                    search(data.suggestion.song.apiId)
+                success: function (data) {
+                    console.log(data)
+                    data.forEach(function (item, index) {
+                        $('#spots').append("<option>" + item.id + "</option>")
+                    })
                 },
-                error:function(err, txtStatus){
-                    console.log("fail song search")
+                error: function (err) {
+                    console.log("cannot read spots lists")
                     console.log(err)
                 }
-            })
+            });
+            $("#myModal").modal();
+        } else {
+            $('#spotName').text(Cookies.get("spot"));
+            gapi.load("client", onLoadFn);
         }
+    });
+    function delCook() {
+        Cookies.remove('id');
+        Cookies.remove('spot');
 
-        var lastSearchResult;
-        function search(id) {
-            var request = gapi.client.youtube.videos.list({
-                id: id,
-                part: 'snippet'
-            });
-            request.execute(function(response) {
-                var str = JSON.stringify(response.result);
-                lastSearchResult = response.result;
-                console.log(response.result);
-                $('#currSong').text(lastSearchResult.items[0].snippet.title)
-                $('#currSong').attr("data-vid",id)
-                $("#vu").animate({ 'color': '#FFF', 'font-size': '24px' }, 1000);
-                $("#vd").animate({ 'color': '#FFF', 'font-size': '24px' }, 1000);
-
-            });
-        }
-        function getVideoData(id, callback){
-            var request = gapi.client.youtube.videos.list({
-                id: id,
-                part: 'snippet'
-            });
-            request.execute(function(response) {
-                var str = JSON.stringify(response.result);
-//                console.log(response.result.items[0].snippet)
-                callback(response.result.items[0])
-                $('#sugLoad').fadeOut();
-                $('.sugCtr').fadeIn();
-                //return response.result.items[0];
-            });
-        }
-
-
-
-    </script>
-    <!-- Modal -->
-    <div class="modal fade" data-keyboard="false" data-backdrop="static" id="myModal" role="dialog">
-        <div class="modal-dialog">
-    <!-- Modal content-->
-    <div class="modal-content">
-        <div class="modal-header" style="padding:35px 50px;">
-            <h4 id="modalTitle"><span class="glyphicon glyphicon-lock"></span> Login</h4>
-        </div>
-        <div class="modal-body" style="padding:40px 50px;">
-
-            <form id="signup" role="formSignUp" style="display: none" onsubmit="return signup()">
-                <div class="form-group">
-                    <label for="susrname"><span class="glyphicon glyphicon-user"></span> Username</label>
-                    <input type="text" class="form-control" id="susrname" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="spsw1"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-                    <input type="text" class="form-control" id="spsw1" placeholder="Enter password">
-                </div>
-                <div class="form-group">
-                    <label for="spsw2"><span class="glyphicon glyphicon-eye-open"></span> Password Verification</label>
-                    <input type="text" class="form-control" id="spsw2" placeholder="Verify password">
-                </div>
-                <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-save"></span> Register</button>
-            </form>
-            <form id="login" role="formLogin" onsubmit="return login()">
-                <div class="form-group">
-                    <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
-                    <input type="text" class="form-control" id="usrname" placeholder="Enter email">
-                </div>
-                <div class="form-group">
-                    <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
-                    <input type="text" class="form-control" id="psw" placeholder="Enter password">
-                </div>
-                <div class="checkbox">
-                    <label><input type="checkbox" value="" checked>Remember me</label>
-                </div>
-                <button type="submit" class="btn btn-success btn-block"><span class="glyphicon glyphicon-off"></span> Login</button>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <p style="color: red; cursor: pointer" onclick="changeFormState()" id="stateText">Not a member? Sign Up</p>
-        </div>
-    </div>
-
-    </div>
-    </div>
-    </div>
-
-    <script>
-        $("#signup").submit(function(e){
-            console.log("cancel")
-            e.preventDefault();
-        });
-        $("#login").submit(function(e){
-            e.preventDefault();
-        });
-        function signup(){
-            console.log("sugntup")
-            if ($('#spsw1').val()!== $('#spsw2').val()){
-                alert("passwords must match")
-            }else{
-                var data = {
-                    "email":$('#susrname').val(),
-                    "password":$('#spsw1').val()
-                };
-                $.ajax({
-                    url:"/api/users",
-                    type: "POST",
-                    contentType:"application/json",
-                    data:JSON.stringify(data),
-                    success:function(data, textStatus){
-                        console.log("success signup")
-                        console.log(data)
-
-                        setCookie("id", data.userId, 30)
-                        $('#myModal').modal('hide');
-                        gapi.load("client", onLoadFn);
-                    },
-                    error:function(err, txtStatus){
-                        console.log("fail register")
-                        console.log(err)
-                    }
-                })
+    }
+    function loginCallback() {
+        $.ajax({
+            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=57ca97a530813219709eb4e4",
+            type: "GET",
+            success: function (data, textStatus) {
+                console.log("song found");
+                console.log(data);
+                search(data.suggestion.song.apiId)
+            },
+            error: function (err, txtStatus) {
+                console.log("fail song search")
+                console.log(err)
             }
-        }
-        function login(){
+        })
+    }
+
+    var lastSearchResult;
+    function search(id) {
+        var request = gapi.client.youtube.videos.list({
+            id: id,
+            part: 'snippet'
+        });
+        request.execute(function (response) {
+            var str = JSON.stringify(response.result);
+            lastSearchResult = response.result;
+            console.log(response.result);
+            $('#currSong').text(lastSearchResult.items[0].snippet.title)
+            $('#currSong').attr("data-vid", id)
+            $("#vu").animate({'color': '#FFF', 'font-size': '24px'}, 1000);
+            $("#vd").animate({'color': '#FFF', 'font-size': '24px'}, 1000);
+
+        });
+    }
+    function getVideoData(id, callback) {
+        var request = gapi.client.youtube.videos.list({
+            id: id,
+            part: 'snippet'
+        });
+        request.execute(function (response) {
+            var str = JSON.stringify(response.result);
+//                console.log(response.result.items[0].snippet)
+            callback(response.result.items[0])
+            $('#sugLoad').fadeOut();
+            $('.sugCtr').fadeIn();
+            //return response.result.items[0];
+        });
+    }
+
+
+</script>
+<!-- Modal -->
+<div class="modal fade" data-keyboard="false" data-backdrop="static" id="myModal" role="dialog">
+    <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header" style="padding:35px 50px;">
+                <h4 id="modalTitle"><span class="glyphicon glyphicon-lock"></span> Login</h4>
+            </div>
+            <div class="modal-body" style="padding:40px 50px;">
+
+                <form id="signup" role="formSignUp" style="display: none" onsubmit="return signup()">
+                    <div class="form-group">
+                        <label for="susrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                        <input type="text" class="form-control" id="susrname" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="spsw1"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                        <input type="text" class="form-control" id="spsw1" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="spsw2"><span class="glyphicon glyphicon-eye-open"></span> Password
+                            Verification</label>
+                        <input type="text" class="form-control" id="spsw2" placeholder="Verify password">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-block"><span
+                            class="glyphicon glyphicon-save"></span> Register
+                    </button>
+                </form>
+                <form id="login" role="formLogin" onsubmit="return login()">
+                    <div class="form-group">
+                        <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                        <input type="text" class="form-control" id="usrname" placeholder="Enter email">
+                    </div>
+                    <div class="form-group">
+                        <label for="psw"><span class="glyphicon glyphicon-eye-open"></span> Password</label>
+                        <input type="text" class="form-control" id="psw" placeholder="Enter password">
+                    </div>
+                    <div class="form-group">
+                        <label for="spots"><span class="glyphicon glyphicon-eye-open"></span> Spot</label>
+                        <select name="spot" id="spots">
+
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-success btn-block"><span
+                            class="glyphicon glyphicon-off"></span> Login
+                    </button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <p style="color: red; cursor: pointer" onclick="changeFormState()" id="stateText">Not a member? Sign
+                    Up</p>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+
+<script>
+    $("#signup").submit(function (e) {
+        e.preventDefault();
+    });
+    $("#login").submit(function (e) {
+        e.preventDefault();
+    });
+    function signup() {
+        if ($('#spsw1').val() !== $('#spsw2').val()) {
+            alert("passwords must match")
+        } else {
             var data = {
-                "email":$('#usrname').val(),
-                "password":$('#psw').val(),
-                "ttl":1209600000
+                "email": $('#susrname').val(),
+                "password": $('#spsw1').val()
             };
             $.ajax({
-                url:"/api/users/login",
+                url: "/api/users",
                 type: "POST",
-                contentType:"application/json",
-                data:JSON.stringify(data),
-                success:function(data, textStatus){
-                    console.log("success login")
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (data, textStatus) {
+                    console.log("success signup")
                     console.log(data)
-                    setCookie("id", data.userId, data.ttl)
+
+                    Cookies.set("id", data.userId)
                     $('#myModal').modal('hide');
                     gapi.load("client", onLoadFn);
                 },
-                error:function(err, txtStatus){
-                    console.log("fail login")
+                error: function (err, txtStatus) {
+                    console.log("fail register")
                     console.log(err)
                 }
             })
         }
-
-        function getCookie(cname) {
-            var name = cname + "=";
-            var ca = document.cookie.split(';');
-            for(var i = 0; i <ca.length; i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') {
-                    c = c.substring(1);
-                }
-                if (c.indexOf(name) == 0) {
-                    return c.substring(name.length,c.length);
-                }
+    }
+    function login() {
+        var data = {
+            "email": $('#usrname').val(),
+            "password": $('#psw').val(),
+            "ttl": 1209600000
+        };
+        $.ajax({
+            url: "/api/users/login",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify(data),
+            success: function (data, textStatus) {
+                console.log("success login")
+                console.log(data);
+                $('#spotName').text("Welcome to " + $('#spots').val() + " Bar")
+                Cookies.set("id", data.userId);
+                Cookies.set("spot", $('#spots').val());
+                $('#myModal').modal('hide');
+                gapi.load("client", onLoadFn);
+            },
+            error: function (err, txtStatus) {
+                console.log("fail login")
+                console.log(err)
             }
-            return "";
-        }
-        function setCookie(cname, cvalue, exdays) {
-            var d = new Date();
-            d.setTime(d.getTime() + (exdays*24*60*60*1000));
-            var expires = "expires="+d.toUTCString();
-            document.cookie = cname + "=" + cvalue + "; " + expires;
-        }
-        var state = "login";
+        })
+    }
+    var state = "login";
 
-        function changeFormState(){
-            if (state==="login"){
-                $('#login').fadeOut("fast", function(){
-                    $('#signup').fadeIn("fast");
-                });
-                $('#stateText').text("Already a member? Sign In");
-                $('#modalTitle').text("Sign Up");
-                state = "signup"
-            }else{
-                $('#signup').fadeOut("fast", function(){
-                    $('#login').fadeIn("fast");
-                });
-                $('#stateText').text("Not a member? Sign Up");
-                $('#modalTitle').text("Login");
-                state = "login"
-            }
+    function changeFormState() {
+        if (state === "login") {
+            $('#login').fadeOut("fast", function () {
+                $('#signup').fadeIn("fast");
+            });
+            $('#stateText').text("Already a member? Sign In");
+            $('#modalTitle').text("Sign Up");
+            state = "signup"
+        } else {
+            $('#signup').fadeOut("fast", function () {
+                $('#login').fadeIn("fast");
+            });
+            $('#stateText').text("Not a member? Sign Up");
+            $('#modalTitle').text("Login");
+            state = "login"
         }
+    }
 
-    </script>
+</script>
 
 </body>
 
