@@ -89,11 +89,11 @@ module.exports = function(user) {
 
     // return a number between 0 and 1
     function getLocalRating(suggestion, playedSongs) {
-        // playedSongs.forEach(playedSong => {
-        //     if (playedSong.suggestion().songId == suggestion.songId) {
-        //         return 0;
-        //     }
-        // });
+        playedSongs.forEach(playedSong => {
+            if (playedSong.suggestion().songId == suggestion.songId) {
+                return 0;
+            }
+        });
 
         var rating = 0;
         suggestion.votes().forEach(vote => {
