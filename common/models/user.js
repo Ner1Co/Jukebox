@@ -154,7 +154,7 @@ module.exports = function(user) {
 
         Spot.findById(spotId, filter, (err, spot) => {
             var elasticCounter = spot.suggestions().length;
-            var topRatedSong = null;
+            var topRatedSuggestion = null;
             var maxScore = 0;
             spot.suggestions().forEach(suggestion => {
                 getElasticRating(suggestion, (err, elasticRating) => {
@@ -163,11 +163,11 @@ module.exports = function(user) {
                     }
                     var score = getLocalRating(suggestion, spot.playedSongs()) + getYoutubeRating(suggestion) + elasticRating;
                     if(score > maxScore) {
-                        topRatedSong = suggestion.song();
+                        topRatedSuggestion = suggestion;
                     }
 
                     if (--elasticCounter == 0) {
-                        callback(null, topRatedSong);
+                        callback(null, topRatedSuggestion);
                     }
 
                 })
