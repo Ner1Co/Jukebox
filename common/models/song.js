@@ -25,11 +25,13 @@ module.exports = function(Song) {
                 }
                 else {
                     var genres = [];
-                    result.items[0].snippet.tags.forEach(genre => {
-                        if(genre = parseGenre(genre)){
-                            genres.push(genre);
-                        }
-                    });
+                    if(result.items[0].snippet.tags) {
+                        result.items[0].snippet.tags.forEach(genre => {
+                            if(genre = parseGenre(genre)){
+                                genres.push(genre);
+                            }
+                        });
+                    }
 
                     ctx.instance.genre = genres;
                     ctx.instance.statistics = result.items[0].statistics;
