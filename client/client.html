@@ -95,7 +95,7 @@
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home">Search & Suggest</a></li>
                     <li><a onclick="getSug()" data-toggle="tab" href="#menu1">View Suggestions</a></li>
-                    <li><a data-toggle="tab" href="#menu2">History</a></li>
+                    <li><a onclick="getHist()" data-toggle="tab" href="#menu2">History</a></li>
                 </ul>
 
                 <div class="tab-content">
@@ -124,12 +124,11 @@
                         </div>
                     </div>
                     <div id="menu2" class="tab-pane fade">
-                        <h3>History</h3>
+                        <h3>What was played in the last 3 hours</h3>
+                        <span id="histLoad" class="glyphicon glyphicon-refresh spinning"></span>
+                        <div class="histCtr">
 
-                        <h2>Small Modal</h2>
-                        <!-- Trigger the modal with a button -->
-
-                        <p>Some content in menu 2.</p>
+                        </div>
 
                     </div>
                 </div>
@@ -213,6 +212,36 @@
         })
     };
     var ytIds = [];
+    var getHist = function(){
+        $('#histLoad').fadeIn();
+        $('.histCtr').fadeOut();
+        $('.histCtr ').empty();
+        //ajax call to server to get ids of history videos
+        $.ajax({
+            url: "/api/spots/" + Cookies.get("spot") + "/extendedPlayedSongs",
+            type: "GET",
+            success: function (data, textStatus) {
+                console.log("get all history");
+                console.log(data);
+                data.forEach(function (sug, idx) {
+                    if (sug.suggestion!==undefined && sug.suggestion.song!==undefined){
+                        entry = getVideoData(sug.suggestion.song.apiId, function (entry) {
+                            var row = document.createElement('div');
+                            row.className = "row";
+                            row.setAttribute("data-vid", sug.suggestion.song.apiId);
+                            console.log(entry)
+                            row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-vid="' + entry.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + entry.id + "'" + ')"></span> <span data-vid="' + entry.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + entry.id + "'" + ')"></span> </div>';
+                            $('.histCtr').prepend(row);
+                        });
+                    }
+                });
+            },
+            error: function (err, txtStatus) {
+                console.log("fail getting suggestions");
+                console.log(err)
+            }
+        });
+    };
     var getSug = function () {
         $('#sugLoad').fadeIn();
         $('.sugCtr').fadeOut();
@@ -380,6 +409,8 @@
             callback(response.result.items[0])
             $('#sugLoad').fadeOut();
             $('.sugCtr').fadeIn();
+            $('#histLoad').fadeOut();
+            $('.histCtr').fadeIn();
             //return response.result.items[0];
         });
     }
