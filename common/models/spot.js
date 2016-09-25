@@ -40,6 +40,8 @@ module.exports = function(spot) {
             where: {
                 spotId: id
             },
+            order: 'date DESC',
+            limit: 50,
             include:[
                 {
                     relation: "suggestion",
