@@ -102,7 +102,7 @@ module.exports = function(user) {
         {
             include:[
                 {
-                    relation: "suggestion",
+                    relation: "suggestions",
                     scope:{
                         where : {
                             played:true
@@ -137,8 +137,6 @@ module.exports = function(user) {
 
             var songIndex = suggestions.length - 1;
             var lastSong = suggestions[songIndex];
-            lastSong.suggestion = suggestions[songIndex]
-            lastSong.suggestion.song = suggestions[songIndex].song();
 
             callback(null, lastSong);
         });

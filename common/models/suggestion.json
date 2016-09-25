@@ -10,7 +10,8 @@
       "type": "date"
     },
     "played": {
-      "type": "boolean"
+      "type": "boolean",
+      "default": false
     },
     "playDate": {
       "type": "date"

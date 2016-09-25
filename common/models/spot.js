@@ -6,12 +6,12 @@ module.exports = function(spot) {
         var filter =
         {
             where: {
-                and :[{spotId: id},  {date: {gt: mindate}}, {played:false}]
+                and :[{spotId: id}, {played:false}]
             },
             include:[
                 {
                     relation:"song"
-                },
+                }
             ]
         };
 
@@ -34,6 +34,7 @@ module.exports = function(spot) {
     );
 
     spot.extendedPlayedSongs = function (id, callback) {
+        console.log(id)
         var Suggestion = spot.app.models.Suggestion;
         var filter =
         {
@@ -58,6 +59,7 @@ module.exports = function(spot) {
                 callback(err, null);
                 return;
             }
+            console.log(suggestions);
             callback(null, suggestions);
         })
     };

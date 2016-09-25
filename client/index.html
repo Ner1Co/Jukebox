@@ -127,12 +127,13 @@
             }
             function playSongToServer() {
                 pData = {
-                    "suggestionId": sugId,
-                    "date":new Date()
+                    "id": sugId,
+                    "playDate":new Date(),
+                    "palyed":true
                 };
                 $.ajax({
-                    url: "/api/spots/" + spotId + "/playedSongs",
-                    type: "POST",
+                    url: "/api/spots/" + spotId + "/suggestion",
+                    type: "PUT",
                     data: pData,
                     success: function (data) {
                         console.log("success playing new song to server")
