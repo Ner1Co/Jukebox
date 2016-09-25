@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Chingy Bar</title>
+    <title>JukeBoxing</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
@@ -72,7 +72,7 @@
     <div class="header-content">
         <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Playing</h1>
 
-        <h2 id="currSong" data-vid=""></h2>
+        <h2 id="currSong" data-vid=""><span class="glyphicon glyphicon-refresh spinning" id="currPlaySpin"></span></h2>
 
         <div class="vote">
             <span id="vu" class="glyphicon glyphicon-thumbs-up up" aria-hidden="true"
@@ -310,7 +310,7 @@
         gapi.client.load("youtube", "v3", function () {
             console.log("loaded");
             loginCallback()
-            setInterval(loginCallback, 10000000);
+            setInterval(loginCallback, 5000);
         })
     }
     function getSpots(callback) {
