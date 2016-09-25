@@ -102,6 +102,22 @@ module.exports = function(user) {
         return (rating / suggestion.votes().length + 1) / 2;
     }
 
+    function filterSuggestions(suggestions, playedSongs) {
+        filteredSuggestions = [];
+        suggestions.forEach(suggestion => {
+            var didPlay = 0;
+            playedSongs.forEach(playedSong => {
+                if (!playedSong.suggestion().id.equals(suggestion.id)) {
+                    didPlay = 1;
+                }
+            });
+            if (!didPlay) {
+                filteredSuggestions.push(suggestion);
+            }
+        })
+        return filteredSuggestions;
+    }
+
     user.getCurrentSong = function(id, spotId, callback) {
         var Spot = user.app.models.Spot;
         var filter =
@@ -195,7 +211,10 @@ module.exports = function(user) {
         };
 
         Spot.findById(spotId, filter, (err, spot) => {
-            var elasticCounter = spot.suggestions().length;
+           // console.log(spot.suggestions());
+            filteredSuggestions = filterSuggestions(spot.suggestions(), spot.playedSongs());
+           // console.log(filteredSuggestions);
+            var elasticCounter = filteredSuggestions.length;
             if (!elasticCounter) {
                 var error = {
                     "error": {
@@ -210,7 +229,7 @@ module.exports = function(user) {
             }
             var topRatedSuggestion = null;
             var maxScore = 0;
-            spot.suggestions().forEach(suggestion => {
+            filteredSuggestions.forEach(suggestion => {
                 getElasticRating(suggestion, (err, elasticRating) => {
                     if (err) {
                         callback(err, null);
