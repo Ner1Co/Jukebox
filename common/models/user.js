@@ -88,34 +88,12 @@ module.exports = function(user) {
     }
 
     // return a number between 0 and 1
-    function getLocalRating(suggestion, playedSongs) {
-        playedSongs.forEach(playedSong => {
-            if (playedSong.suggestion().songId == suggestion.songId) {
-                return 0;
-            }
-        });
-
+    function getLocalRating(suggestion) {
         var rating = 0;
         suggestion.votes().forEach(vote => {
             rating += vote.score;
         });
         return (rating / suggestion.votes().length + 1) / 2;
-    }
-
-    function filterSuggestions(suggestions, playedSongs) {
-        filteredSuggestions = [];
-        suggestions.forEach(suggestion => {
-            var didPlay = 0;
-            playedSongs.forEach(playedSong => {
-                if (!playedSong.suggestion().id.equals(suggestion.id)) {
-                    didPlay = 1;
-                }
-            });
-            if (!didPlay) {
-                filteredSuggestions.push(suggestion);
-            }
-        })
-        return filteredSuggestions;
     }
 
     user.getCurrentSong = function(id, spotId, callback) {
@@ -124,18 +102,14 @@ module.exports = function(user) {
         {
             include:[
                 {
-                    relation: "playedSongs",
-                    scope: {
-                        include:[
-                            {
-                                relation: "suggestion",
-                                scope:{
-                                    include: {
-                                        relation: "song"
-                                    }
-                                }
-                            }
-                        ]
+                    relation: "suggestion",
+                    scope:{
+                        where : {
+                            played:true
+                        },
+                        include: {
+                            relation: "song"
+                        }
                     }
                 }
             ]
@@ -143,9 +117,9 @@ module.exports = function(user) {
 
         Spot.findById(spotId, filter, (err, spot) => {
 
-            var playedSongs = spot.playedSongs();
-            console.log(playedSongs);
-            if (!playedSongs.length) {
+            var suggestions = spot.suggestions();
+            console.log(suggestions);
+            if (!suggestions.length) {
                 var error = {
                     "error": {
                         "name": "NoCurrentSong",
@@ -157,14 +131,14 @@ module.exports = function(user) {
                 callback(error, null);
                 return;
             }
-            playedSongs.sort((a, b) => {
-                return new Date(b.date) - new Date(a.date);
+            suggestions.sort((a, b) => {
+                return new Date(b.playDate) - new Date(a.playDate);
             });
 
-            var songIndex = playedSongs.length - 1;
-            var lastSong = playedSongs[songIndex];
-            lastSong.suggestion = playedSongs[songIndex].suggestion();
-            lastSong.suggestion.song = playedSongs[songIndex].suggestion().song;
+            var songIndex = suggestions.length - 1;
+            var lastSong = suggestions[songIndex];
+            lastSong.suggestion = suggestions[songIndex]
+            lastSong.suggestion.song = suggestions[songIndex].song();
 
             callback(null, lastSong);
         });
@@ -187,6 +161,9 @@ module.exports = function(user) {
                 {
                     relation: "suggestions",
                     scope:{
+                        where: {
+                            played:false
+                        },
                         include:[
                             {
                                 relation:"song"
@@ -196,24 +173,12 @@ module.exports = function(user) {
                             }
                         ]
                     }
-                },
-                {
-                    relation: "playedSongs",
-                    scope: {
-                        include:[
-                            {
-                                relation: "suggestion"
-                            }
-                        ]
-                    }
                 }
             ]
         };
 
         Spot.findById(spotId, filter, (err, spot) => {
-           // console.log(spot.suggestions());
-            filteredSuggestions = filterSuggestions(spot.suggestions(), spot.playedSongs());
-           // console.log(filteredSuggestions);
+            filteredSuggestions = spot.suggestions();
             var elasticCounter = filteredSuggestions.length;
             if (!elasticCounter) {
                 var error = {
@@ -234,7 +199,7 @@ module.exports = function(user) {
                     if (err) {
                         callback(err, null);
                     }
-                    var score = getLocalRating(suggestion, spot.playedSongs()) + getYoutubeRating(suggestion) + elasticRating;
+                    var score = getLocalRating(suggestion) + getYoutubeRating(suggestion) + elasticRating;
                     if(score > maxScore) {
                         maxScore = score;
                         topRatedSuggestion = suggestion;

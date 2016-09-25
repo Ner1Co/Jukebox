@@ -52,9 +52,5 @@
   "Song": {
     "dataSource": "mongodb",
     "public": true
-  },
-  "PlayedSong": {
-    "dataSource": "mongodb",
-    "public": true
   }
 }

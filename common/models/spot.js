@@ -6,7 +6,7 @@ module.exports = function(spot) {
         var filter =
         {
             where: {
-                and :[{spotId: id},  {date: {gt: mindate}}]
+                and :[{spotId: id},  {date: {gt: mindate}}, {played:false}]
             },
             include:[
                 {
@@ -34,37 +34,31 @@ module.exports = function(spot) {
     );
 
     spot.extendedPlayedSongs = function (id, callback) {
-        var PlayedSong = spot.app.models.PlayedSong;
+        var Suggestion = spot.app.models.Suggestion;
         var filter =
         {
             where: {
-                spotId: id
+                spotId: id,
+                played: true
             },
             order: 'date DESC',
             limit: 50,
             include:[
                 {
-                    relation: "suggestion",
+                    relation:"song",
                     scope: {
-                        include:[
-                            {
-                                relation:"song",
-                                scope: {
-                                    fields: ['apiId']
-                                }
-                            },
-                        ]
+                        fields: ['apiId']
                     }
-                }
+                },
             ]
         };
 
-        PlayedSong.find(filter, (err ,playedSongs) => {
+        Suggestion.find(filter, (err ,suggestions) => {
             if (err) {
                 callback(err, null);
                 return;
             }
-            callback(null, playedSongs);
+            callback(null, suggestions);
         })
     };
 

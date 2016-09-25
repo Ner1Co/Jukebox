@@ -8,6 +8,12 @@
   "properties": {
     "date": {
       "type": "date"
+    },
+    "played": {
+      "type": "boolean"
+    },
+    "playDate": {
+      "type": "date"
     }
   },
   "validations": [],
