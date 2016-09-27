@@ -131,9 +131,9 @@ module.exports = function(user) {
                 callback(error, null);
                 return;
             }
-            suggestions.sort((a, b) => {
-                return new Date(b.playDate) - new Date(a.playDate);
-            });
+            //suggestions.sort((a, b) => {
+            //    return new Date(b.playDate) - new Date(a.playDate);
+            //});
 
             var songIndex = suggestions.length - 1;
             var lastSong = suggestions[songIndex];

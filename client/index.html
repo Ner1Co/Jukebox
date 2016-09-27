@@ -129,10 +129,10 @@
                 pData = {
                     "id": sugId,
                     "playDate":new Date(),
-                    "palyed":true
+                    "played":true
                 };
                 $.ajax({
-                    url: "/api/spots/" + spotId + "/suggestion",
+                    url: "/api/suggestions",
                     type: "PUT",
                     data: pData,
                     success: function (data) {
@@ -163,6 +163,7 @@
                     error: function (err) {
                         console.log("fail getting next video");
                         console.log(err);
+                        setTimeout(function(){ getNewVideo(callback); }, 3000);
                     }
                 });
 
