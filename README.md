@@ -48,3 +48,41 @@ curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users
   curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{id}/spotSuggestions?spotId={spotId}&access_token={access_token}"
 ```
 returns a `suggestion` with an inner `song` and `votes` which is an array with one or no objects, which is the user's vote.
+
+- Create a new vote
+```
+curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{
+  "score": 0,
+  "date": "2016-09-29",
+  "comment": "string",
+  "spotId": "string",
+  "suggestionId": "string"
+}" "http://localhost:3000/api/users/{userId}/votes?access_token={access_token}
+```
+
+- Create a new vote - cannot create more than one vote with the same 1suggestionId` and `userdId`.
+```
+curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{
+  \"score\": 0,
+  \"date\": "2016-09-29",
+  \"comment\": "string",
+  \"spotId\": "string",
+  \"suggestionId\": "string"
+}" "http://localhost:3000/api/users/{userId}/votes?access_token={access_token}
+```
+- Update a vote - cannot create more than one vote with the same `suggestionId` and `userdId` 
+
+```
+curl -X PUT --header "Content-Type: application/json" --header "Accept: application/json" -d "{
+  \"score\": 0,
+  \"date\": \"2016-09-29\",
+  \"comment\": \"string\",
+  \"tags\": [
+    \"string\"
+  ],
+  \"id\": \"string\",
+  \"userId\": \"string\",
+  \"spotId\": \"string\",
+  \"suggestionId\": \"string\"
+}" "http://localhost:3000/api/users/sdfdsf/votes/sdfsdfdsf?access_token=
+```
