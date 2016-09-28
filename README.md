@@ -26,7 +26,7 @@ curl -X POST --header "Content-Type: application/json" --header "Accept: applica
             \"api\":\"youtube\"
         },
         \"comment\":\"I hate my parents\"
-     } " "http://localhost:3000/api/users/{id}/newSuggestion"
+     } " "http://localhost:3000/api/users/{id}/makeSuggestion"
 ```
 
 - Add played song (suggestion) on spot:
@@ -46,3 +46,9 @@ curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users
 ```
   curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/getNextSong?spotId={spotId}"
 ```
+
+- Get suggestions:
+```
+  curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/spotSuggestion?spotId={spotId}"
+```
+returns a `suggestion` with an inner `song` and `votes` which is an array with one or no objects, which is the user's vote.
