@@ -26,29 +26,25 @@ curl -X POST --header "Content-Type: application/json" --header "Accept: applica
             \"api\":\"youtube\"
         },
         \"comment\":\"I hate my parents\"
-     } " "http://localhost:3000/api/users/{id}/makeSuggestion"
+     } " "http://localhost:3000/api/users/{id}/makeSuggestion&access_token={access_token}"
+```
+- Get the history:
+```
+curl -X GET --header "Accept: application/json" "http://localhost:3000/api/Spots/{spotId}/playedSongs?access_token={access_token}&access_token={access_token}"
 ```
 
-- Add played song (suggestion) on spot:
+- Get the current song on spot:
 ```
-curl -X POST --header "Content-Type: application/json" --header "Accept: application/json" -d "{
-  \"date\": \"2016-09-03\",
-  \"suggestionId\": \"57cad9ae85dfd0006ce46e50\"
-}" "http://localhost:3000/api/Spots/57ca97a530813219709eb4e4/playedSongs"
-```
-
-- Get the currnet song on spot:
-```
-curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/1/getCurrentSong?spotId=57ca97a530813219709eb4e4"
+curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/getCurrentSong?spotId={spotId}&access_token={access_token}"
 ```
 
 - Get the next song on spot:
 ```
-  curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/getNextSong?spotId={spotId}"
+  curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/getNextSong?spotId={spotId}&access_token={access_token}"
 ```
 
 - Get suggestions:
 ```
-  curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{userId}/spotSuggestion?spotId={spotId}"
+  curl -X GET --header "Accept: application/json" "http://localhost:3000/api/users/{id}/spotSuggestions?spotId={spotId}&access_token={access_token}"
 ```
 returns a `suggestion` with an inner `song` and `votes` which is an array with one or no objects, which is the user's vote.
