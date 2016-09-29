@@ -53,6 +53,12 @@
       "principalId": "$authenticated",
       "permission": "ALLOW",
       "property": "playedSongs"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "create"
     }
   ],
   "methods": {}
