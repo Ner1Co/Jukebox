@@ -9,7 +9,7 @@ module.exports = function(user) {
         "comment":"str"
      }
      */
-    user.newSuggestion = function (id, data, callback){
+    user.makeSuggestion = function (id, data, callback){
         var Song = user.app.models.Song;
         var Suggestion = user.app.models.Suggestion;
         var Vote = user.app.models.Vote;
@@ -45,8 +45,16 @@ module.exports = function(user) {
                     return;
                 }
                 Suggestion.create({userId: id, songId: song.id, spotId: data.spotId, date: new Date()}, (err, newSuggestion) => {
+                    if(err) {
+                        callback(err, null);
+                        return;
+                    }
                     Vote.create({score: 1, date: new Date(), comment: data.comment, suggestionId: newSuggestion.id,
                         userId: id, spotId: data.spotId}, (err, newVote) => {
+                        if(err) {
+                            callback(err, null);
+                            return;
+                        }
                         newSuggestion.vote = newVote;
                         callback(null, newSuggestion);
                     });
@@ -57,6 +65,10 @@ module.exports = function(user) {
 
 
         Song.findOne({where: {and :[{api: data.song.api}, {apiId: data.song.apiId}]}}, (err ,foundSong) => {
+            if(err) {
+                callback(err, null);
+                return;
+            }
             if(foundSong) {
                 createSuggestion(foundSong);
             } else {
@@ -68,10 +80,10 @@ module.exports = function(user) {
     };
 
     user.remoteMethod(
-        'newSuggestion',
+        'makeSuggestion',
         {
             accepts: [{arg: 'id', type: 'string'}, {arg: 'data', type: 'json', http: { source: 'body' }}],
-            http: {path: '/:id/newSuggestion', verb: 'post'},
+            http: {path: '/:id/makeSuggestion', verb: 'post'},
             returns: {arg: 'result', type: 'string', root: true}
         }
     );
@@ -82,7 +94,11 @@ module.exports = function(user) {
 
     function getYoutubeRating(suggestion) {
         var song = suggestion.song();
-        var rating = song.statistics.likeCount / song.statistics.viewCount - song.statistics.dislikeCount / song.statistics.viewCount;
+        if (!song.statistics) {
+            return 0;
+        }
+
+        var rating = (song.statistics.likeCount - song.statistics.dislikeCount) / song.statistics.viewCount;
 
         return rating;
     }
@@ -103,13 +119,23 @@ module.exports = function(user) {
             include:[
                 {
                     relation: "suggestions",
-                    scope:{
+                    scope: {
                         where : {
-                            played:true
+                            played: true
                         },
-                        include: {
-                            relation: "song"
-                        }
+                        include: [
+                            {
+                                relation: "song"
+                            },
+                            {
+                                relation: "votes",
+                                scope: {
+                                    where: {
+                                        userId: id
+                                    }
+                                }
+                            }
+                        ]
                     }
                 }
             ]
@@ -162,20 +188,17 @@ module.exports = function(user) {
                         where: {
                             played:false
                         },
-                        include:[
-                            {
+                        include: {
                                 relation:"song"
-                            },
-                            {
-                                relation:"votes"
-                            }
-                        ]
+                        }
+
                     }
                 }
             ]
         };
 
         Spot.findById(spotId, filter, (err, spot) => {
+
             filteredSuggestions = spot.suggestions();
             var elasticCounter = filteredSuggestions.length;
             if (!elasticCounter) {
@@ -230,6 +253,48 @@ module.exports = function(user) {
         {
             accepts: [{arg: 'id', type: 'string'}, {arg: 'spotId', type: 'string'}],
             http: {path: '/:id/getNextSong', verb: 'get'},
+            returns: {arg: 'result', type: 'object', root: true}
+        }
+    );
+
+    user.spotSuggestions = function (id, spotId, callback) {
+        var Suggestion = user.app.models.Suggestion;
+        var mindate = Date.now() - 3 * 60 * 60 * 1000;
+        var filter =
+        {
+            where: {
+                and :[{spotId: spotId}, {played:false}, {date: {gt: mindate}}]
+            },
+            include:[
+                {
+                    relation:"song"
+                },
+                {
+                    relation: "votes",
+                    scope: {
+                        where: {
+                            userId: id
+                        }
+                    }
+
+                }
+            ]
+        };
+
+        Suggestion.find(filter, (err ,suggestions) => {
+            if (err) {
+                callback(err, null);
+                return;
+            }
+            callback(null, suggestions);
+        })
+    };
+
+    user.remoteMethod(
+        'spotSuggestions',
+        {
+            accepts: [{arg: 'id', type: 'string'}, {arg: 'spotId', type: 'string'}],
+            http: {path: '/:id/spotSuggestions', verb: 'get'},
             returns: {arg: 'result', type: 'object', root: true}
         }
     );

@@ -1,6 +1,26 @@
 var request = require('request');
 
 module.exports = function(Vote) {
+    Vote.validateAsync('suggestionId', customValidator, {message: 'duplicate vote'});
+    function customValidator(err, done) {
+
+        var userId = this.userId;
+        var suggestionId = this.suggestionId;
+        var id = this.id;
+
+        var filter = {
+            where: {
+                and:[{userId: userId}, {suggestionId: suggestionId}]
+            }
+        }
+        Vote.findOne(filter, (error, vote) => {
+            if (vote && !vote.id.equals(this.id)) {
+                console.log('will err');
+                err();
+            }
+            done();
+        });
+    };
 
     function getKeyPhrases(string, callback){
         var post_data = {

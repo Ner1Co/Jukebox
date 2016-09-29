@@ -30,6 +30,30 @@
       "model": "PlayedSong"
     }
   },
-  "acls": [],
+  "acls": [
+    {
+    "principalType": "ROLE",
+    "principalId": "$everyone",
+    "permission": "DENY"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$everyone",
+      "permission": "ALLOW",
+      "property": "find"
+    },
+    {
+    "principalType": "ROLE",
+    "principalId": "$authenticated",
+    "permission": "ALLOW",
+    "property": "suggestionsWithSongs"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "permission": "ALLOW",
+      "property": "playedSongs"
+    }
+  ],
   "methods": {}
 }

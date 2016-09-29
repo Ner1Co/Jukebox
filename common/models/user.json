@@ -22,20 +22,38 @@
     {
       "permission": "ALLOW",
       "principalType": "ROLE",
-      "principalId": "$everyone",
-      "property": "newSuggestion"
+      "principalId": "$authenticated",
+      "property": "makeSuggestion"
     },
     {
       "permission": "ALLOW",
       "principalType": "ROLE",
-      "principalId": "$everyone",
+      "principalId": "$authenticated",
       "property": "getNextSong"
     },
     {
       "permission": "ALLOW",
       "principalType": "ROLE",
-      "principalId": "$everyone",
+      "principalId": "$authenticated",
       "property": "getCurrentSong"
+    },
+    {
+      "permission": "ALLOW",
+      "principalType": "ROLE",
+      "principalId": "$authenticated",
+      "property": "spotSuggestions"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "__create__votes"
+    },
+    {
+      "principalType": "ROLE",
+      "principalId": "$owner",
+      "permission": "ALLOW",
+      "property": "__updateById__votes"
     }
   ],
   "methods": []

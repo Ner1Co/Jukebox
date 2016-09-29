@@ -1,6 +1,6 @@
 module.exports = function(spot) {
 
-    spot.extendedSuggestions = function (id, callback) {
+    spot.suggestionsWithSongs = function (id, callback) {
         var Suggestion = spot.app.models.Suggestion;
         var mindate = Date.now() - 3 * 60 * 60 * 1000;
         var filter =
@@ -25,15 +25,15 @@ module.exports = function(spot) {
     };
 
     spot.remoteMethod(
-        'extendedSuggestions',
+        'suggestionsWithSongs',
         {
             accepts: [{arg: 'id', type: 'string'}],
-            http: {path: '/:id/extendedSuggestions', verb: 'get'},
+            http: {path: '/:id/suggestionsWithSongs', verb: 'get'},
             returns: {arg: 'result', type: 'object', root: true}
         }
     );
 
-    spot.extendedPlayedSongs = function (id, callback) {
+    spot.playedSongs = function (id, callback) {
         console.log(id)
         var Suggestion = spot.app.models.Suggestion;
         var filter =
@@ -65,10 +65,10 @@ module.exports = function(spot) {
     };
 
     spot.remoteMethod(
-        'extendedPlayedSongs',
+        'playedSongs',
         {
             accepts: [{arg: 'id', type: 'string'}],
-            http: {path: '/:id/extendedPlayedSongs', verb: 'get'},
+            http: {path: '/:id/playedSongs', verb: 'get'},
             returns: {arg: 'result', type: 'object', root: true}
         }
     );
