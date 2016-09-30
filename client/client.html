@@ -255,6 +255,7 @@
         });
     };
     var getSug = function () {
+        var voteObj;
         $('#sugLoad').fadeIn();
         $('.sugCtr').fadeOut();
         $('.sugCtr ').empty();
@@ -269,19 +270,22 @@
                     $('.sugCtr').fadeIn();
                 } else {
                     data.forEach(function (sug, idx) {
+                        console.log(sug)
                         ytIds.push(sug.song.apiId)
                         entry = getVideoData(sug.song.apiId, function (entry) {
                             var row = document.createElement('div');
                             row.className = "row";
                             row.setAttribute("data-vid", sug.song.apiId);
                             row.setAttribute("data-sugid", sug.id);
-                            console.log(entry)
-                            row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-sid="' + sug.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + sug.id + "'" + ')"></span> <span data-sid="' + sug.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + sug.id + "'" + ')"></span> </div>';
+                            row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-sid="' + sug.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(this,' + "'up'" + ",'" + sug.id + "'" + ')"></span> <span data-sid="' + sug.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(this,' + "'down'" + ",'" + sug.id + "'" + ')"></span> </div>';
                             $('.sugCtr').prepend(row);
-                            if (suggestedIds.indexOf(sug.song.apiId) > -1) {
-                                $('button[data-vid="' + sug.song.apiId + '"]').text("Suggestion Accepted!");
-                                $('button[data-vid="' + sug.song.apiId + '"]').attr("disabled", "disabled");
+                            voteObj = isUserVoted(sug.votes);
+
+                            if (voteObj!== 0){
+                                updateVoteStatus(voteObj.suggestionId, voteObj.score, voteObj.id)
                             }
+                            console.log(voteObj)
+
                         });
                     });
                 }
@@ -293,39 +297,89 @@
         });
     };
 
+    function isUserVoted(votesArr){
+        var v=-1;
+        votesArr.forEach(function(vote,idx){
+
+            if (vote.userId === Cookies.get('id')){
+                console.log(vote)
+                v=vote;
+            }
+        });
+        return v
+    }
+
+    function updateVoteStatus(id, type, vid){
+        $('.up[data-sid="' + id + '"]').attr("data-voteid",vid);
+        $('.down[data-sid="' + id + '"]').attr("data-voteid",vid);
+        if (type === 1) {
+            $('.up[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.down[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+            $('.up[data-sid="' + id + '"]').attr("disabled",true);
+            $('.down[data-sid="' + id + '"]').attr("disabled",false);
+        } else if (type===-1) {
+            $('.down[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.up[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+            $('.down[data-sid="' + id + '"]').attr('disabled',true);
+            $('.up[data-sid="' + id + '"]').prop('disabled',false);
+        }
+    }
     var defineSug = function (elm) {
         $('#suggestModal').attr("data-vid", $(elm).attr("data-vid"))
         console.log("defineSug");
     };
-    var vote = function (v, id) {
-        alert(id);
-        alert(v);
+    var vote = function (t, v, id) {
+        if ($(t).attr('disabled')==='disabled'){
+            return;
+        }
+        alert($(t).data('voteid'));
         var score = 0;
         //send vote to server with id
         if (v === "up") {
             $('.up[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.up[data-sid="' + id + '"]').attr('disabled','disabled');
+            $('.down[data-sid="' + id + '"]').attr('disabled','');
             $('.down[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
             score=1;
         } else {
             $('.down[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
+            $('.down[data-sid="' + id + '"]').attr('disabled','disabled');
+            $('.up[data-sid="' + id + '"]').attr('disabled','');
             $('.up[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
             score=-1;
         }
+        var data={
+            "suggestionId":id,
+            "spotId":Cookies.get('spot'),
+            "userId":Cookies.get('id'),
+            "score":score,
+            "date":new Date()
+        }
         $.ajax({
-            url:"/api/votes",
+            url:"/api/users/"+Cookies.get('id')+"/votes",
             type:"POST",
-            data:{
-                "suggestionId":id,
-                "spotId":Cookies.get('spot'),
-                "userId":Cookies.get('id'),
-                "score":score,
-                "date":new Date()
-            },
+            data:data,
             success:function(data){
                 console.log("success voting");
                 console.log(data)
             },
             error:function(err){
+                if (err.status===422){
+                    console.log("trying to update vote");
+                    $.ajax({
+                        url:"/api/users/"+Cookies.get('id')+"/votes/"+$(t).data('voteid'),
+                        type:"PUT",
+                        data:data,
+                        success:function(data){
+                            console.log("success voting update");
+                            console.log(data)
+                        },
+                        error:function(err){
+                            console.log("error voting update");
+                            console.log(err)
+                        }
+                    })
+                }
                 console.log("error voting");
                 console.log(err)
             }
@@ -406,8 +460,6 @@
             url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=" + Cookies.get("spot"),
             type: "GET",
             success: function (data, textStatus) {
-                console.log("song found");
-                console.log(data);
                 search(data.song.apiId)
             },
             error: function (err, txtStatus) {
@@ -431,7 +483,6 @@
         request.execute(function (response) {
             var str = JSON.stringify(response.result);
             lastSearchResult = response.result;
-            console.log(response.result);
             $('#currSong').text(lastSearchResult.items[0].snippet.title)
             $('#currSong').attr("data-vid", id)
             $("#vu").animate({'color': '#FFF', 'font-size': '24px'}, 1000);
