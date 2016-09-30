@@ -91,8 +91,9 @@ var getSug = function () {
                 $('.sugCtr').append("<h3>No suggestions found currently</h3>");
                 $('.sugCtr').fadeIn();
             } else {
+                console.log(data)
                 data.forEach(function (sug, idx) {
-                    console.log(sug)
+
                     ytIds.push(sug.song.apiId)
                     entry = getVideoData(sug.song.apiId, function (entry) {
                         var row = document.createElement('div');
@@ -106,7 +107,6 @@ var getSug = function () {
                         if (voteObj!== 0){
                             updateVoteStatus(voteObj.suggestionId, voteObj.score, voteObj.id)
                         }
-                        console.log(voteObj)
 
                     });
                 });
@@ -154,7 +154,6 @@ var vote = function (t, v, id) {
     if ($(t).attr('disabled')==='disabled'){
         return;
     }
-    alert($(t).data('voteid'));
     var score = 0;
     //send vote to server with id
     if (v === "up") {
@@ -285,10 +284,10 @@ function search(id) {
     request.execute(function (response) {
         var str = JSON.stringify(response.result);
         lastSearchResult = response.result;
+        console.log(lastSearchResult);
         $('#currSong').text(lastSearchResult.items[0].snippet.title)
         $('#currSong').attr("data-vid", id)
-        $("#vu").animate({'color': '#FFF', 'font-size': '24px'}, 1000);
-        $("#vd").animate({'color': '#FFF', 'font-size': '24px'}, 1000);
+
 
     });
 }
@@ -405,6 +404,8 @@ function delCook() {
     $('#currSong').text("");
     $('#currSong').attr("data-vid", "");
     $('#spotName').text("");
+    $('#spots').find('option').remove().end();
+    $('#spotsReg').find('option').remove().end();
     $('#login').trigger("reset");
     $('#signup').trigger("reset");
     clearInterval(timer);
