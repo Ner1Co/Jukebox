@@ -105,6 +105,7 @@ module.exports = function(user) {
 
     // return a number between 0 and 1
     function getLocalRating(suggestion) {
+        console.log(suggestion);
         var rating = 0;
         suggestion.votes().forEach(vote => {
             rating += vote.score;
@@ -131,7 +132,7 @@ module.exports = function(user) {
                                 relation: "votes",
                                 scope: {
                                     where: {
-                                        userId: id
+
                                     }
                                 }
                             }
@@ -142,9 +143,8 @@ module.exports = function(user) {
         };
 
         Spot.findById(spotId, filter, (err, spot) => {
-
             var suggestions = spot.suggestions();
-            console.log(suggestions);
+
             if (!suggestions.length) {
                 var error = {
                     "error": {
@@ -157,12 +157,12 @@ module.exports = function(user) {
                 callback(error, null);
                 return;
             }
-            //suggestions.sort((a, b) => {
-            //    return new Date(b.playDate) - new Date(a.playDate);
-            //});
+            suggestions.sort((a, b) => {
+                return new Date(b.playDate) - new Date(a.playDate);
+            });
 
             var songIndex = suggestions.length - 1;
-            var lastSong = suggestions[songIndex];
+            var lastSong = suggestions[0];
 
             callback(null, lastSong);
         });
@@ -188,9 +188,18 @@ module.exports = function(user) {
                         where: {
                             played:false
                         },
-                        include: {
+                        include: [{
                                 relation:"song"
-                        }
+                        },
+                            {
+                                relation: "votes",
+                                scope: {
+                                    where: {
+
+                                    }
+                                }
+                            }
+                        ]
 
                     }
                 }
@@ -273,7 +282,7 @@ module.exports = function(user) {
                     relation: "votes",
                     scope: {
                         where: {
-                            userId: id
+
                         }
                     }
 

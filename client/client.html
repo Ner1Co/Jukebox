@@ -197,7 +197,7 @@
 
         console.log(JSON.stringify(sugData));
         $.ajax({
-            url: "/api/users/" + Cookies.get("id") + "/newSuggestion",
+            url: "/api/users/" + Cookies.get("id") + "/makeSuggestion",
             type: "POST",
             data: JSON.stringify(sugData),
             contentType: "application/json",
@@ -230,7 +230,7 @@
         $('.histCtr ').empty();
         //ajax call to server to get ids of history videos
         $.ajax({
-            url: "/api/spots/" + Cookies.get("spot") + "/extendedPlayedSongs",
+            url: "/api/spots/" + Cookies.get("spot") + "/PlayedSongs",
             type: "GET",
             success: function (data, textStatus) {
                 console.log("get all history");
@@ -260,7 +260,7 @@
         $('.sugCtr ').empty();
         //ajax call to server to get ids of suggested videos
         $.ajax({
-            url: "/api/spots/" + Cookies.get("spot") + "/extendedSuggestions",
+            url: "/api/users/" + Cookies.get("id") + "/spotSuggestions?spotId="+Cookies.get("spot"),
             type: "GET",
             success: function (data, textStatus) {
                 if (data.length === 0) {
@@ -342,13 +342,14 @@
             $('#vu').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
         }
     };
+    var timer=0;
     function onLoadFn() {
         // make gapi.client calls
         gapi.client.setApiKey("AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g");
         gapi.client.load("youtube", "v3", function () {
             console.log("loaded");
-            loginCallback()
-            setInterval(loginCallback, 5000);
+            loginCallback();
+            timer = setInterval(loginCallback, 5000);
         })
     }
     function getSpots(callback) {
@@ -366,8 +367,9 @@
                         $('#spots').append('<option data-id="' + item.id + '">' + item.name + '</option>');
                         $('#spotsReg').append('<option data-id="' + item.id + '">' + item.name + '</option>');
                     }
-                    callback();
+
                 });
+                callback();
             },
             error: function (err) {
                 console.log("cannot read spots lists");
@@ -394,6 +396,7 @@
         $('#spotName').text("");
         $('#login').trigger("reset");
         $('#signup').trigger("reset");
+        clearInterval(timer);
         getSpots(function () {
             $("#myModal").modal();
         })
@@ -547,7 +550,7 @@
                     $('#spotName').text("Welcome to " + $('#spotsReg').val())
                     Cookies.set("spot", $('#spotsReg option:selected').attr('data-id'));
                     Cookies.set("spotName", $('#spotsReg').val());
-                    Cookies.set("id", data.userId)
+                    Cookies.set("id", data.id)
                     $('#myModal').modal('hide');
                     gapi.load("client", onLoadFn);
                 },

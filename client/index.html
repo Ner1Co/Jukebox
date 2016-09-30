@@ -36,6 +36,7 @@
     <![endif]-->
     <!-- youtube search-->
     <script src='js/ytembed.js'></script>
+    <script src='js/cookie.js'></script>
 </head>
 
 <body id="page-top">
@@ -310,7 +311,8 @@
                         success: function (userData, textStatus) {
                             console.log("success user with spot creation")
                             console.log(userData);
-                            $('#spotNameTitle').text("Welcome to " + sdata.name);
+                            $('#spotNameTitl' +
+                                    'e').text("Welcome to " + sdata.name);
                             userId = userData.userId;
                             getNewVideo(function () {
                                 player.cueVideoById(url);
@@ -354,9 +356,10 @@
                         url: "/api/spots/" + userData.user.admin,
                         type: "GET",
                         success: function (sData) {
-                            console.log("success getting spot data of user")
+                            console.log("success getting spot data of user");
                             $('#spotNameTitle').text("Welcome to " + sData.name);
                             spotId = sData.id;
+
                             getNewVideo(function () {
                                 player.cueVideoById(url);
                                 player.playVideo();
