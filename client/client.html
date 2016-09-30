@@ -73,15 +73,6 @@
         <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Playing</h1>
 
         <h2 id="currSong" data-vid=""><span class="glyphicon glyphicon-refresh spinning" id="currPlaySpin"></span></h2>
-
-        <div class="vote">
-            <span id="vu" class="glyphicon glyphicon-thumbs-up up" aria-hidden="true"
-                  onclick="voteCurrent('up')"></span>
-
-            <span id="vd" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true"
-                  onclick="voteCurrent('down')"></span>
-
-        </div>
     </div>
 
 </header>
@@ -94,7 +85,7 @@
             <div class="col-lg-12  text-center">
                 <ul class="nav nav-tabs">
                     <li class="active"><a data-toggle="tab" href="#home">Search & Suggest</a></li>
-                    <li><a onclick="getSug()" data-toggle="tab" href="#menu1">View Suggestions</a></li>
+                    <li><a onclick="getSug()" data-toggle="tab" href="#menu1">Suggestions</a></li>
                     <li><a onclick="getHist()" data-toggle="tab" href="#menu2">History</a></li>
                 </ul>
 
@@ -212,12 +203,12 @@
                 console.log("fail suggestion");
                 console.log(err)
                 if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 999){
-                    alert("Song was already played in the last 24 hours :(");
+                    alert("Song was already suggested in the last 24 hours, you can vote it in Suggestions tab :(");
                     $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').text("Suggestion Played!");
                     $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').attr("disabled", "disabled");
                     $('#suggestText').val("");
                 }else{
-                    alert("failed suggesting song...:(")
+                    console.log("failed suggesting song...:(")
                 }
 
             }
@@ -242,7 +233,7 @@
                             row.className = "row";
                             row.setAttribute("data-vid", sug.song.apiId);
                             console.log(entry)
-                            row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-vid="' + entry.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(' + "'up'" + ",'" + entry.id + "'" + ')"></span> <span data-vid="' + entry.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(' + "'down'" + ",'" + entry.id + "'" + ')"></span> </div>';
+                            row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div>';
                             $('.histCtr').prepend(row);
                         });
                     }
