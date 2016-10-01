@@ -143,6 +143,15 @@ module.exports = function(user) {
         };
 
         Spot.findById(spotId, filter, (err, spot) => {
+            if (spot===undefined||spot===null){
+                callback({
+                    "name": "incorrect data",
+                    "status": 994,
+                    "message": "No data.",
+                    "statusCode": 994,
+                }, null);
+                return;
+            }
             var suggestions = spot.suggestions();
 
             if (!suggestions.length) {

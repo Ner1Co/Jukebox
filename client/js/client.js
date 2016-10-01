@@ -13,7 +13,7 @@ var submitSug = function () {
             api: "youtube"
         },
         comment: $('#suggestText').val(),
-        played:false
+        played: false
     };
 
 
@@ -33,12 +33,12 @@ var submitSug = function () {
         error: function (err, txtStatus) {
             console.log("fail suggestion");
             console.log(err)
-            if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 999){
+            if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 999) {
                 alert("Song was already suggested in the last 24 hours, you can vote it in Suggestions tab :(");
                 $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').text("Suggestion Played!");
                 $('button[data-vid="' + $("#suggestModal").attr("data-vid") + '"]').attr("disabled", "disabled");
                 $('#suggestText').val("");
-            }else{
+            } else {
                 console.log("failed suggesting song...:(")
             }
 
@@ -83,7 +83,7 @@ var getSug = function () {
     $('.sugCtr ').empty();
     //ajax call to server to get ids of suggested videos
     $.ajax({
-        url: "/api/users/" + Cookies.get("id") + "/spotSuggestions?spotId="+Cookies.get("spot"),
+        url: "/api/users/" + Cookies.get("id") + "/spotSuggestions?spotId=" + Cookies.get("spot"),
         type: "GET",
         success: function (data, textStatus) {
             if (data.length === 0) {
@@ -104,7 +104,7 @@ var getSug = function () {
                         $('.sugCtr').prepend(row);
                         voteObj = isUserVoted(sug.votes);
 
-                        if (voteObj!== 0){
+                        if (voteObj !== 0) {
                             updateVoteStatus(voteObj.suggestionId, voteObj.score, voteObj.id)
                         }
 
@@ -119,31 +119,31 @@ var getSug = function () {
     });
 };
 
-function isUserVoted(votesArr){
-    var v=-1;
-    votesArr.forEach(function(vote,idx){
+function isUserVoted(votesArr) {
+    var v = -1;
+    votesArr.forEach(function (vote, idx) {
 
-        if (vote.userId === Cookies.get('id')){
+        if (vote.userId === Cookies.get('id')) {
             console.log(vote)
-            v=vote;
+            v = vote;
         }
     });
     return v
 }
 
-function updateVoteStatus(id, type, vid){
-    $('.up[data-sid="' + id + '"]').attr("data-voteid",vid);
-    $('.down[data-sid="' + id + '"]').attr("data-voteid",vid);
+function updateVoteStatus(id, type, vid) {
+    $('.up[data-sid="' + id + '"]').attr("data-voteid", vid);
+    $('.down[data-sid="' + id + '"]').attr("data-voteid", vid);
     if (type === 1) {
         $('.up[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
         $('.down[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
-        $('.up[data-sid="' + id + '"]').attr("disabled",true);
-        $('.down[data-sid="' + id + '"]').attr("disabled",false);
-    } else if (type===-1) {
+        $('.up[data-sid="' + id + '"]').attr("disabled", true);
+        $('.down[data-sid="' + id + '"]').attr("disabled", false);
+    } else if (type === -1) {
         $('.down[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
         $('.up[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
-        $('.down[data-sid="' + id + '"]').attr("disabled",true);
-        $('.up[data-sid="' + id + '"]').attr("disabled",false);
+        $('.down[data-sid="' + id + '"]').attr("disabled", true);
+        $('.up[data-sid="' + id + '"]').attr("disabled", false);
     }
 }
 var defineSug = function (elm) {
@@ -151,47 +151,47 @@ var defineSug = function (elm) {
     console.log("defineSug");
 };
 var vote = function (t, v, id) {
-    if ($(t).attr('disabled')==='disabled'){
+    if ($(t).attr('disabled') === 'disabled') {
         return;
     }
     var score = 0;
     //send vote to server with id
     if (v === "up") {
         $('.up[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
-        $('.up[data-sid="' + id + '"]').attr('disabled',true);
-        $('.down[data-sid="' + id + '"]').attr('disabled',false);
+        $('.up[data-sid="' + id + '"]').attr('disabled', true);
+        $('.down[data-sid="' + id + '"]').attr('disabled', false);
         $('.down[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
-        score=1;
+        score = 1;
     } else {
         $('.down[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
-        $('.down[data-sid="' + id + '"]').attr('disabled',true);
-        $('.up[data-sid="' + id + '"]').attr('disabled',false);
+        $('.down[data-sid="' + id + '"]').attr('disabled', true);
+        $('.up[data-sid="' + id + '"]').attr('disabled', false);
         $('.up[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
-        score=-1;
+        score = -1;
     }
-    var data={
-        "suggestionId":id,
-        "spotId":Cookies.get('spot'),
-        "userId":Cookies.get('id'),
-        "score":score,
-        "date":new Date()
+    var data = {
+        "suggestionId": id,
+        "spotId": Cookies.get('spot'),
+        "userId": Cookies.get('id'),
+        "score": score,
+        "date": new Date()
     }
     $.ajax({
-        url:"/api/users/"+Cookies.get('id')+"/votes",
-        type:"POST",
-        data:data,
-        success:function(data){
+        url: "/api/users/" + Cookies.get('id') + "/votes",
+        type: "POST",
+        data: data,
+        success: function (data) {
         },
-        error:function(err){
-            if (err.status===422){
+        error: function (err) {
+            if (err.status === 422) {
                 $.ajax({
-                    url:"/api/users/"+Cookies.get('id')+"/votes/"+$(t).data('voteid'),
-                    type:"PUT",
-                    data:data,
-                    success:function(data){
+                    url: "/api/users/" + Cookies.get('id') + "/votes/" + $(t).data('voteid'),
+                    type: "PUT",
+                    data: data,
+                    success: function (data) {
                         console.log("success voting update");
                     },
-                    error:function(err){
+                    error: function (err) {
                         console.log("error voting update");
                     }
                 })
@@ -211,14 +211,14 @@ var voteCurrent = function (v) {
         $('#vu').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
     }
 };
-var timer=0;
+var timerSearch = 0;
 function onLoadFn() {
     // make gapi.client calls
     gapi.client.setApiKey("AIzaSyB-bHFy0ffnjj909Gb96OKISWFu57pkp8g");
     gapi.client.load("youtube", "v3", function () {
         console.log("loaded");
         loginCallback();
-        timer = setInterval(loginCallback, 5000);
+        timerSearch = setInterval(loginCallback, 5000);
     })
 }
 function getSpots(callback) {
@@ -257,22 +257,28 @@ $('document').ready(function () {
 });
 
 function loginCallback() {
-    $.ajax({
-        url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=" + Cookies.get("spot"),
-        type: "GET",
-        success: function (data, textStatus) {
-            search(data.song.apiId)
-        },
-        error: function (err, txtStatus) {
-            console.log("fail song search")
-            console.log(err)
+    if (Cookies.get("id") !== undefined) {
+        $.ajax({
+            url: "/api/users/" + Cookies.get("id") + "/getCurrentSong?spotId=" + Cookies.get("spot"),
+            type: "GET",
+            success: function (data, textStatus) {
+                search(data.song.apiId)
+            },
+            error: function (err, txtStatus) {
+                console.log("fail song search")
+                console.log(err)
 
-            if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 998 ||
-                err.responseJSON.error.error.status === 997) {
-                $('#currSong').text("Silence in the spot, no songs yet...");
+                if (err.responseJSON.error.error.status !== undefined && err.responseJSON.error.error.status === 998 ||
+                    err.responseJSON.error.error.status === 997) {
+                    $('#currSong').text("Silence in the spot, no songs yet...");
+                }
             }
-        }
-    })
+        })
+    } else {
+        alert("Please login again");
+        clearInterval(timerSearch);
+        delCook();
+    }
 }
 
 var lastSearchResult;
@@ -287,6 +293,7 @@ function search(id) {
         console.log(lastSearchResult);
         $('#currSong').text(lastSearchResult.items[0].snippet.title)
         $('#currSong').attr("data-vid", id)
+        $('#currImg').attr('src',lastSearchResult.items[0].snippet.thumbnails.medium.url)
 
 
     });
@@ -309,7 +316,6 @@ function getVideoData(id, callback) {
 }
 
 
-
 //login and signup
 
 $("#signup").submit(function (e) {
@@ -321,33 +327,42 @@ $("#login").submit(function (e) {
 function signup() {
     if ($('#spsw1').val() !== $('#spsw2').val()) {
         alert("passwords must match")
-    } else {
-        var data = {
-            "email": $('#susrname').val(),
-            "password": $('#spsw1').val()
-        };
-        $.ajax({
-            url: "/api/users",
-            type: "POST",
-            contentType: "application/json",
-            data: JSON.stringify(data),
-            success: function (data, textStatus) {
-                console.log("success signup")
-                console.log(data);
-
-                $('#spotName').text("Welcome to " + $('#spotsReg').val())
-                Cookies.set("spot", $('#spotsReg option:selected').attr('data-id'));
-                Cookies.set("spotName", $('#spotsReg').val());
-                Cookies.set("id", data.id)
-                $('#myModal').modal('hide');
-                gapi.load("client", onLoadFn);
-            },
-            error: function (err, txtStatus) {
-                console.log("fail register")
-                console.log(err)
-            }
-        })
+        return;
     }
+    if (!validateEmail($('#susrname').val())){
+        alert("email is not valid")
+        return;
+    }
+
+    var data = {
+        "email": $('#susrname').val(),
+        "password": $('#spsw1').val()
+    };
+    $.ajax({
+        url: "/api/users",
+        type: "POST",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (data, textStatus) {
+            console.log("success signup")
+            console.log(data);
+
+            $('#spotName').text("Welcome to " + $('#spotsReg').val())
+            Cookies.set("spot", $('#spotsReg option:selected').attr('data-id'));
+            Cookies.set("spotName", $('#spotsReg').val());
+            Cookies.set("id", data.id)
+            $('#myModal').modal('hide');
+            gapi.load("client", onLoadFn);
+        },
+        error: function (err, txtStatus) {
+            console.log("fail register")
+            console.log(err);
+            if (err.status === 422) {
+                alert("User name already exists in the system");
+            }
+        }
+    })
+
 }
 function login() {
     var data = {
@@ -371,11 +386,16 @@ function login() {
             gapi.load("client", onLoadFn);
         },
         error: function (err, txtStatus) {
-            console.log("fail login")
+            console.log("fail login");
             console.log(err)
+            if (err.status === 401) {
+                alert("user does not exist or password dont match");
+            }
+
         }
     })
 }
+
 var state = "login";
 
 function changeFormState() {
@@ -408,10 +428,15 @@ function delCook() {
     $('#spotsReg').find('option').remove().end();
     $('#login').trigger("reset");
     $('#signup').trigger("reset");
-    clearInterval(timer);
+    clearInterval(timerSearch);
     getSpots(function () {
         $("#myModal").modal();
     })
 }
 
 
+//utils
+function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+}

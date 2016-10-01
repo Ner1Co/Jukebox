@@ -68,13 +68,14 @@
     <!-- /.container-fluid -->
 </nav>
 
-<header>
+<header style="min-height:90%">
     <div class="header-content">
         <h1>Currently <span id="hp" class="glyphicon glyphicon-headphones" aria-hidden="true"></span> Playing</h1>
 
         <h2 id="currSong" data-vid=""><span class="glyphicon glyphicon-refresh spinning" id="currPlaySpin"></span></h2>
+        <div><img id="currImg" src="" alt=""/></div>
     </div>
-    <div><img id="currImg" src="" alt=""/></div>
+
 
 </header>
 <!--YOUTUBE TABS-->
@@ -182,7 +183,7 @@
 
                 <form id="signup" role="formSignUp" style="display: none" onsubmit="return signup()">
                     <div class="form-group">
-                        <label for="susrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                        <label for="susrname"><span class="glyphicon glyphicon-user"></span> Email</label>
                         <input type="text" class="form-control" id="susrname" placeholder="Enter email">
                     </div>
                     <div class="form-group">
@@ -206,7 +207,7 @@
                 </form>
                 <form id="login" role="formLogin" onsubmit="return login()">
                     <div class="form-group">
-                        <label for="usrname"><span class="glyphicon glyphicon-user"></span> Username</label>
+                        <label for="usrname"><span class="glyphicon glyphicon-user"></span> Email</label>
                         <input type="text" class="form-control" id="usrname" placeholder="Enter email">
                     </div>
                     <div class="form-group">
