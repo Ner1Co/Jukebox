@@ -78,6 +78,7 @@ var getHist = function () {
 };
 var getSug = function () {
     var voteObj;
+    var votesNum=[];
     $('#sugLoad').fadeIn();
     $('.sugCtr').fadeOut();
     $('.sugCtr ').empty();
@@ -93,14 +94,14 @@ var getSug = function () {
             } else {
                 console.log(data)
                 data.forEach(function (sug, idx) {
-
+                    votesNum=getNumOfVotes(sug.votes);
                     ytIds.push(sug.song.apiId)
                     entry = getVideoData(sug.song.apiId, function (entry) {
                         var row = document.createElement('div');
                         row.className = "row";
                         row.setAttribute("data-vid", sug.song.apiId);
                         row.setAttribute("data-sugid", sug.id);
-                        row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"> <span data-sid="' + sug.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(this,' + "'up'" + ",'" + sug.id + "'" + ')"></span> <span data-sid="' + sug.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(this,' + "'down'" + ",'" + sug.id + "'" + ')"></span> </div>';
+                        row.innerHTML = '<div class="col-lg-12"><h3>' + entry.snippet.title + '</h3> <div>' + (entry.contentDetails ? 'Duration: ' + ytEmbed.formatDuration(entry.contentDetails.duration) + ' | ' : '') + (entry.statistics ? 'Views: ' + entry.statistics.viewCount + '<br>' : '') + '</a></div></div><div><img src="' + entry.snippet.thumbnails.medium.url + '" alt=""/></div><div class="vote"><span id="voteup_'+sug.id +'" class="voteSign">'+ votesNum[0]+'</span><span data-sid="' + sug.id + '" class="up glyphicon glyphicon-thumbs-up" aria-hidden="true" onclick="vote(this,' + "'up'" + ",'" + sug.id + "'" + ')"></span> <span data-sid="' + sug.id + '" class="glyphicon glyphicon-thumbs-down down" aria-hidden="true" onclick="vote(this,' + "'down'" + ",'" + sug.id + "'" + ')"></span> <span id="votedown_'+sug.id +'"  class="voteSign">'+ votesNum[1]+'</span></div>';
                         $('.sugCtr').prepend(row);
                         voteObj = isUserVoted(sug.votes);
 
@@ -131,6 +132,19 @@ function isUserVoted(votesArr) {
     return v
 }
 
+function getNumOfVotes(votesArr){
+    var counterUp=0;
+    var counterDown=0;
+    votesArr.forEach(function (vote, idx) {
+
+        if (vote.score === 1) {
+            counterUp++;
+        }else{
+            counterDown++;
+        }
+    });
+    return [counterUp,counterDown];
+}
 function updateVoteStatus(id, type, vid) {
     $('.up[data-sid="' + id + '"]').attr("data-voteid", vid);
     $('.down[data-sid="' + id + '"]').attr("data-voteid", vid);
@@ -157,16 +171,30 @@ var vote = function (t, v, id) {
     var score = 0;
     //send vote to server with id
     if (v === "up") {
+        if ($('.down[data-sid="' + id + '"]').attr('disabled')==='disabled'){
+            $('#votedown_'+id).text(parseInt($('#votedown_'+id).text())-1)
+            $('#voteup_'+id).text(parseInt($('#voteup_'+id).text())+1)
+        }else{
+            $('#voteup_'+id).text(parseInt($('#voteup_'+id).text())+1)
+        }
         $('.up[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
         $('.up[data-sid="' + id + '"]').attr('disabled', true);
         $('.down[data-sid="' + id + '"]').attr('disabled', false);
         $('.down[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+
         score = 1;
     } else {
+        if ($('.up[data-sid="' + id + '"]').attr('disabled')==='disabled'){
+            $('#voteup_'+id).text(parseInt($('#voteup_'+id).text())-1)
+            $('#votedown_'+id).text(parseInt($('#votedown_'+id).text())+1)
+        }else{
+            $('#votedown_'+id).text(parseInt($('#votedown_'+id).text())+1)
+        }
         $('.down[data-sid="' + id + '"]').animate({'color': '#FC0', 'font-size': '40px'}, 1000);
         $('.down[data-sid="' + id + '"]').attr('disabled', true);
         $('.up[data-sid="' + id + '"]').attr('disabled', false);
         $('.up[data-sid="' + id + '"]').animate({'color': '#FFF', 'font-size': '12px'}, 1000);
+
         score = -1;
     }
     var data = {
